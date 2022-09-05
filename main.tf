@@ -26,10 +26,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
   dns_prefix          = "demoaks1"
 
   default_node_pool {
-    name               = "default"
-    node_count         = each.value.default_node_pool.count
-    vm_size            = each.value.default_node_pool.vmsize
-    availability_zones = each.value.config.zones
+    name       = "default"
+    node_count = each.value.default_node_pool.count
+    vm_size    = each.value.default_node_pool.vmsize
+    zones      = each.value.config.zones
   }
 
   identity {
