@@ -2,7 +2,7 @@ module "aks" {
   source = "../../"
   aks = {
     aks1 = {
-      config = { location = "westeurope", resourcegroup = "rg-aks-weu" }
+      config = { location = "westeurope", resourcegroup = "rg-aks-weu", zones = [1, 2, 3] }
       default_node_pool = {
         vmsize = "Standard_DS2_v2"
         count  = 1

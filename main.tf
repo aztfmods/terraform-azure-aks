@@ -24,6 +24,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   location            = each.value.config.location
   resource_group_name = azurerm_resource_group.rg[each.key].name
   dns_prefix          = "demoaks1"
+  zones               = each.value.config.zones
 
   default_node_pool {
     name       = "default"
