@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/dkooll/terraform-azurerm-aks/compare/v1.0.0...v1.1.0) (2022-09-05)
+
+
+### Features
+
+* add availability zone support ([#6](https://github.com/dkooll/terraform-azurerm-aks/issues/6)) ([5c904aa](https://github.com/dkooll/terraform-azurerm-aks/commit/5c904aa6f43e747c6153a10b436164ab906a0367))
+
 ## 1.0.0 (2022-09-05)
 
 
