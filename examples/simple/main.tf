@@ -7,6 +7,11 @@ module "aks" {
         vmsize = "Standard_DS2_v2"
         count  = 1
       }
+
+      node_pools = {
+        pool1 = { vmsize = "Standard_DS2_v2", count = 1 }
+        pool2 = { vmsize = "Standard_DS2_v2", count = 1 }
+      }
     }
   }
 }

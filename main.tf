@@ -35,3 +35,18 @@ resource "azurerm_kubernetes_cluster" "aks" {
     type = "SystemAssigned"
   }
 }
+
+#----------------------------------------------------------------------------------------
+# node pools
+#----------------------------------------------------------------------------------------
+
+resource "azurerm_kubernetes_cluster_node_pool" "pools" {
+  for_each = {
+    for pools in local.aks_pools : "${pools.aks_key}.${pools.pools_key}" => pools
+  }
+
+  name                  = each.value.poolname
+  kubernetes_cluster_id = each.value.aks_cluster_id
+  vm_size               = each.value.vmsize
+  node_count            = each.value.count
+}
