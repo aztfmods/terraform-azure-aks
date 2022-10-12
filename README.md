@@ -1,4 +1,4 @@
-![example workflow](https://github.com/dkooll/terraform-azurerm-aks/actions/workflows/validate.yml/badge.svg)
+![example workflow](https://github.com/aztfmods/module-azurerm-aks/actions/workflows/validate.yml/badge.svg)
 
 # Kubernetes Service
 
@@ -6,9 +6,10 @@ Terraform module which creates kubernetes resources on Azure.
 
 The below features are made available:
 
-- Multiple aks clusters
-- Multiple node pools on each cluster
-- Terratest is used to validate different integrations in [examples](examples)
+- multiple aks clusters
+- multiple node pools on each cluster
+- terratest is used to validate different integrations in [examples](examples)
+- [diagnostic](examples/diagnostic-settings/main.tf) logs integration
 
 The below examples shows the usage when consuming the module:
 
@@ -17,12 +18,22 @@ The below examples shows the usage when consuming the module:
 ```hcl
 module "aks" {
   source = "github.com/dkooll/terraform-azurerm-aks"
+
+  naming = {
+    company = local.naming.company
+    env     = local.naming.env
+    region  = local.naming.region
+  }
+
   aks = {
-    aks1 = {
-      config = { location = "westeurope", resourcegroup = "rg-aks-weu" }
+    demo = {
+      location      = module.global.groups.aks.location
+      resourcegroup = module.global.groups.aks.name
+
       default_node_pool = {
         vmsize = "Standard_DS2_v2"
-        count  = 1
+        zones  = [1, 2, 3]
+        count  = 2
       }
 
       node_pools = {
@@ -31,6 +42,7 @@ module "aks" {
       }
     }
   }
+  depends_on = [module.global]
 }
 ```
 
@@ -39,9 +51,18 @@ module "aks" {
 ```hcl
 module "aks" {
   source = "github.com/dkooll/terraform-azurerm-aks"
+
+  naming = {
+    company = local.naming.company
+    env     = local.naming.env
+    region  = local.naming.region
+  }
+
   aks = {
     aks1 = {
-      config = { location = "westeurope", resourcegroup = "rg-aks-weu" }
+      location      = module.global.groups.aks.location
+      resourcegroup = module.global.groups.aks.name
+
       default_node_pool = {
         vmsize = "Standard_DS2_v2"
         count  = 1
@@ -49,7 +70,9 @@ module "aks" {
     }
 
     aks2 = {
-      config = { location = "eastus", resourcegroup = "rg-aks-eus" }
+      location      = module.global.groups.aks.location
+      resourcegroup = module.global.groups.aks.name
+
       default_node_pool = {
         vmsize = "Standard_DS2_v2"
         count  = 1
@@ -64,8 +87,8 @@ module "aks" {
 | Name | Type |
 | :-- | :-- |
 | [azurerm_resource_group](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) | resource |
-| [azurerm_kubernetes_cluster](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) | resource |
-| [azurerm_kubernetes_cluster_node_pool](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network_dns_servers) | resource |
+| [azurerm_kubernetes_cluster](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster) | resource |
+| [azurerm_kubernetes_cluster_node_pool](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster_node_pool) | resource |
 
 ## Inputs
 
@@ -77,11 +100,13 @@ module "aks" {
 
 | Name | Description |
 | :-- | :-- |
+| `aks` | contains all bastion hosts |
+| `merged_ids` | contains all resource id's specified within the object |
 
 ## Authors
 
-Module is maintained by [Dennis Kool](https://github.com/dkooll) with help from [these awesome contributors](https://github.com/dkooll/terraform-azurerm-vnet/graphs/contributors).
+Module is maintained by [Dennis Kool](https://github.com/dkooll) with help from [these awesome contributors](https://github.com/aztfmods/module-azurerm-aks/graphs/contributors).
 
 ## License
 
-MIT Licensed. See [LICENSE](https://github.com/dkooll/terraform-azurerm-vnet/tree/master/LICENSE) for full details.
+MIT Licensed. See [LICENSE](https://github.com/aztfmods/module-azurerm-vnet/blob/main/LICENSE) for full details.
