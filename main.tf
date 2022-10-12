@@ -1,16 +1,11 @@
-provider "azurerm" {
-  features {}
-}
-
 #----------------------------------------------------------------------------------------
-# resource groups
+# resourcegroups
 #----------------------------------------------------------------------------------------
 
-resource "azurerm_resource_group" "rg" {
+data "azurerm_resource_group" "rg" {
   for_each = var.aks
 
-  name     = each.value.config.resourcegroup
-  location = each.value.config.location
+  name = each.value.resourcegroup
 }
 
 #----------------------------------------------------------------------------------------
@@ -20,9 +15,9 @@ resource "azurerm_resource_group" "rg" {
 resource "azurerm_kubernetes_cluster" "aks" {
   for_each = var.aks
 
-  name                = "demo-aks1"
-  location            = each.value.config.location
-  resource_group_name = azurerm_resource_group.rg[each.key].name
+  name                = "aks-${var.naming.company}-${each.key}-${var.naming.env}-${var.naming.region}"
+  resource_group_name = data.azurerm_resource_group.rg[each.key].name
+  location            = data.azurerm_resource_group.rg[each.key].location
   dns_prefix          = "demoaks1"
 
   default_node_pool {

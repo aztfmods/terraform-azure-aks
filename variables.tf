@@ -1,1 +1,2 @@
 variable "aks" {}
+variable "naming" {}
