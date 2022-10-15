@@ -39,7 +39,7 @@ module "aks" {
         zones      = [1, 2, 3]
         node_count = 1
         max_count  = 10
-        min_count  = 3
+        min_count  = 1
 
         enable = {
           auto_scaling = true
