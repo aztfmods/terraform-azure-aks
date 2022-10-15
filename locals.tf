@@ -6,7 +6,7 @@ locals {
         aks_key        = aks_key
         pools_key      = pools_key
         vmsize         = pools.vmsize
-        count          = pools.count
+        count          = pools.node_count
         poolname       = "aks${pools_key}"
         aks_cluster_id = azurerm_kubernetes_cluster.aks[aks_key].id
       }
