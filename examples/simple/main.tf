@@ -41,6 +41,7 @@ module "aks" {
 
         enable = {
           auto_scaling = true
+          max_count    = 10
         }
       }
 
