@@ -38,10 +38,10 @@ module "aks" {
         vmsize     = "Standard_DS2_v2"
         zones      = [1, 2, 3]
         node_count = 1
+        max_count  = 10
 
         enable = {
           auto_scaling = true
-          max_count    = 10
         }
       }
 
