@@ -8,7 +8,7 @@ The below features are made available:
 
 - multiple aks clusters
 - multiple node pools on each cluster
-- terratest is used to validate different integrations in [examples](examples)
+- [terratest](https://terratest.gruntwork.io) is used to validate different integrations
 - [diagnostic](examples/diagnostic-settings/main.tf) logs integration
 
 The below examples shows the usage when consuming the module:
@@ -31,9 +31,9 @@ module "aks" {
       resourcegroup = module.global.groups.aks.name
 
       default_node_pool = {
-        vmsize = "Standard_DS2_v2"
-        zones  = [1, 2, 3]
-        count  = 2
+        vmsize     = "Standard_DS2_v2"
+        zones      = [1, 2, 3]
+        node_count = 1
       }
 
       node_pools = {
@@ -64,8 +64,9 @@ module "aks" {
       resourcegroup = module.global.groups.aks.name
 
       default_node_pool = {
-        vmsize = "Standard_DS2_v2"
-        count  = 1
+        vmsize     = "Standard_DS2_v2"
+        zones      = [1, 2, 3]
+        node_count = 1
       }
     }
 
@@ -74,8 +75,9 @@ module "aks" {
       resourcegroup = module.global.groups.aks.name
 
       default_node_pool = {
-        vmsize = "Standard_DS2_v2"
-        count  = 1
+      default_node_pool = {
+        vmsize     = "Standard_DS2_v2"
+        node_count = 1
       }
     }
   }
@@ -109,4 +111,4 @@ Module is maintained by [Dennis Kool](https://github.com/dkooll) with help from 
 
 ## License
 
-MIT Licensed. See [LICENSE](https://github.com/aztfmods/module-azurerm-vnet/blob/main/LICENSE) for full details.
+MIT Licensed. See [LICENSE](https://github.com/aztfmods/module-azurerm-aks/blob/main/LICENSE) for full details.
