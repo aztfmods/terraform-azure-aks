@@ -6,8 +6,8 @@ Terraform module which creates kubernetes resources on Azure.
 
 The below features are made available:
 
-- multiple aks clusters
-- multiple node pools on each cluster
+- [multiple](#usage-multiple-kubernetes-clusters) aks clusters
+- [node pool](#usage-single-kubernetes-cluster-multiple-node-pools) support on each cluster
 - [terratest](https://terratest.gruntwork.io) is used to validate different integrations
 - [diagnostic](examples/diagnostic-settings/main.tf) logs integration
 
@@ -75,7 +75,6 @@ module "aks" {
       resourcegroup = module.global.groups.aks.name
 
       default_node_pool = {
-      default_node_pool = {
         vmsize     = "Standard_DS2_v2"
         node_count = 1
       }
@@ -92,18 +91,25 @@ module "aks" {
 | [azurerm_kubernetes_cluster](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster) | resource |
 | [azurerm_kubernetes_cluster_node_pool](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster_node_pool) | resource |
 
+## Data Sources
+
+| Name | Type |
+| :-- | :-- |
+| [azurerm_resource_group](https://registry.terraform.io/providers/hashicorp/azurerm/1.39.0/docs/data-sources/resource_group) | datasource |
+
 ## Inputs
 
 | Name | Description | Type | Required |
 | :-- | :-- | :-- | :-- |
 | `aks` | describes aks related configuration | object | yes |
+| `naming` | contains naming convention | string | yes |
 
 ## Outputs
 
 | Name | Description |
 | :-- | :-- |
 | `aks` | contains all bastion hosts |
-| `merged_ids` | contains all resource id's specified within the object |
+| `merged_ids` | contains all resource id's specified within the module |
 
 ## Authors
 
