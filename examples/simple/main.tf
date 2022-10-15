@@ -35,14 +35,23 @@ module "aks" {
       resourcegroup = module.global.groups.aks.name
 
       default_node_pool = {
-        vmsize = "Standard_DS2_v2"
-        zones  = [1, 2, 3]
-        count  = 2
+        vmsize     = "Standard_DS2_v2"
+        zones      = [1, 2, 3]
+        node_count = 1
+        max_count  = 10
+        min_count  = 1
+
+        enable = {
+          auto_scaling = true
+        }
       }
 
       node_pools = {
-        pool1 = { vmsize = "Standard_DS2_v2", count = 1 }
-        pool2 = { vmsize = "Standard_DS2_v2", count = 1 }
+        pool1 = {
+          vmsize     = "Standard_DS2_v2"
+          zones      = [1, 2, 3]
+          node_count = 1
+        }
       }
     }
   }
