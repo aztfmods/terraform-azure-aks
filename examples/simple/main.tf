@@ -36,7 +36,6 @@ module "aks" {
       node_resource_group = "${module.global.groups.aks.name}-node"
       channel_upgrade     = "stable"
 
-      sku        = "Free"
       dns_prefix = "aksdemo"
       version    = 1.22
 
@@ -44,13 +43,7 @@ module "aks" {
         vmsize     = "Standard_DS2_v2"
         zones      = [1, 2, 3]
         node_count = 1
-        max_count  = 10
-        min_count  = 1
-
-        enable = {
-          auto_scaling = true
-          azure_policy = true
-        }
+        max_surge  = 50
       }
 
       node_pools = {
@@ -58,6 +51,7 @@ module "aks" {
           vmsize     = "Standard_DS2_v2"
           zones      = [1, 2, 3]
           node_count = 1
+          max_surge  = 50
         }
       }
     }
