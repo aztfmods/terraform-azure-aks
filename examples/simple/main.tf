@@ -31,8 +31,14 @@ module "aks" {
 
   aks = {
     demo = {
-      location      = module.global.groups.aks.location
-      resourcegroup = module.global.groups.aks.name
+      location            = module.global.groups.aks.location
+      resourcegroup       = module.global.groups.aks.name
+      node_resource_group = "${module.global.groups.aks.name}-node"
+      channel_upgrade     = "stable"
+
+      sku        = "Free"
+      dns_prefix = "aksdemo"
+      version    = 1.22
 
       default_node_pool = {
         vmsize     = "Standard_DS2_v2"
@@ -43,6 +49,7 @@ module "aks" {
 
         enable = {
           auto_scaling = true
+          azure_policy = true
         }
       }
 
