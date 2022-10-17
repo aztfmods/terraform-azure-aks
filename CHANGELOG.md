@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0](https://github.com/aztfmods/module-azurerm-aks/compare/v1.2.0...v1.3.0) (2022-10-17)
+
+
+### Features
+
+* add optional cluster arguments kubernetes_version, sku_tier, node_resource_group, azure_policy_enabled, ([#16](https://github.com/aztfmods/module-azurerm-aks/issues/16)) ([b14311b](https://github.com/aztfmods/module-azurerm-aks/commit/b14311b001791113a32a3b0f1b034a92048d6e3d))
+* small update documentation ([#14](https://github.com/aztfmods/module-azurerm-aks/issues/14)) ([101256f](https://github.com/aztfmods/module-azurerm-aks/commit/101256f0be22f953314216474e251e63ebaa07f9))
+
 ## [1.2.0](https://github.com/aztfmods/module-azurerm-aks/compare/v1.1.0...v1.2.0) (2022-10-12)
 
 
