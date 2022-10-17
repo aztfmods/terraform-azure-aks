@@ -18,7 +18,13 @@ resource "azurerm_kubernetes_cluster" "aks" {
   name                = "aks-${var.naming.company}-${each.key}-${var.naming.env}-${var.naming.region}"
   resource_group_name = data.azurerm_resource_group.rg[each.key].name
   location            = data.azurerm_resource_group.rg[each.key].location
-  dns_prefix          = "demoaks1"
+
+  kubernetes_version        = try(each.value.version, null)
+  sku_tier                  = try(each.value.sku, "Free")
+  node_resource_group       = try(each.value.node_resource_group, [])
+  azure_policy_enabled      = try(each.value.enable.azure_policy, false)
+  dns_prefix                = try(each.value.dns_prefix, [])
+  automatic_channel_upgrade = try(each.value.channel_upgrade, null)
 
   default_node_pool {
     name       = "default"
