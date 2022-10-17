@@ -7,6 +7,7 @@ locals {
         pools_key      = pools_key
         vmsize         = pools.vmsize
         count          = pools.node_count
+        max_surge      = pools.max_surge
         poolname       = "aks${pools_key}"
         aks_cluster_id = azurerm_kubernetes_cluster.aks[aks_key].id
       }

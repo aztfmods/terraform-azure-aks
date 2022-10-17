@@ -43,6 +43,16 @@ resource "azurerm_kubernetes_cluster" "aks" {
     node_labels                  = try(each.value.default_node_pool.node_labels, null)
     os_sku                       = try(each.value.default_node_pool.os_sku, null)
     type                         = try(each.value.default_node_pool.type, "VirtualMachineScaleSets")
+
+    dynamic "upgrade_settings" {
+      for_each = {
+        for k, v in var.aks : k => v
+      }
+
+      content {
+        max_surge = each.value.default_node_pool.max_surge
+      }
+    }
   }
 
   identity {
@@ -80,4 +90,14 @@ resource "azurerm_kubernetes_cluster_node_pool" "pools" {
   os_sku                 = try(each.value.os_sku, null)
   os_type                = try(each.value.os_type, null)
   priority               = try(each.value.priority, null)
+
+  dynamic "upgrade_settings" {
+    for_each = {
+      for pool in local.aks_pools : "${pool.aks_key}.${pool.pools_key}" => pool
+    }
+
+    content {
+      max_surge = each.value.max_surge
+    }
+  }
 }
