@@ -26,6 +26,26 @@ resource "azurerm_kubernetes_cluster" "aks" {
   dns_prefix                = try(each.value.dns_prefix, [])
   automatic_channel_upgrade = try(each.value.channel_upgrade, null)
 
+  #network profile
+  dynamic "network_profile" {
+    for_each = {
+      for k, v in try(var.aks.network_profile, {}) : k => v
+    }
+
+    content {
+      network_plugin     = try(network_profile.value.network_plugin, null)
+      network_mode       = try(network_profile.value.network_mode, null)
+      network_policy     = try(network_profile.value.network_policy, null)
+      dns_service_ip     = try(network_profile.value.dns_service_ip, null)
+      docker_bridge_cidr = try(network_profile.value.docker_bridge_cidr, null)
+      outbound_type      = try(network_profile.value.outbound_type, null)
+      pod_cidr           = try(network_profile.value.pod_cidr, null)
+      service_cidr       = try(network_profile.value.service_cidr, null)
+      load_balancer_sku  = try(network_profile.value.load_balancer_sku, null)
+    }
+  }
+
+  #auto scaler profile
   dynamic "auto_scaler_profile" {
     for_each = {
       for k, v in try(var.aks.auto_scaler_profile, {}) : k => v
@@ -52,6 +72,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     }
   }
 
+  #default node pool
   default_node_pool {
     name       = "default"
     vm_size    = each.value.default_node_pool.vmsize
