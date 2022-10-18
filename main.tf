@@ -27,9 +27,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
   automatic_channel_upgrade = try(each.value.channel_upgrade, null)
 
   dynamic "auto_scaler_profile" {
-      for_each = {
-        for k, v in try(var.aks.auto_scaler_profile, {}) : k => v
-      }
+    for_each = {
+      for k, v in try(var.aks.auto_scaler_profile, {}) : k => v
+    }
 
     content {
       balance_similar_node_groups      = try(auto_scaler_profile.value.balance_similar_node_groups, false)
