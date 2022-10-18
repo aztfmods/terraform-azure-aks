@@ -35,9 +35,8 @@ module "aks" {
       resourcegroup       = module.global.groups.aks.name
       node_resource_group = "${module.global.groups.aks.name}-node"
       channel_upgrade     = "stable"
-
-      dns_prefix = "aksdemo"
-      version    = 1.22
+      dns_prefix          = "aksdemo"
+      version             = 1.22
 
       default_node_pool = {
         vmsize     = "Standard_DS2_v2"

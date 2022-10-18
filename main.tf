@@ -26,6 +26,32 @@ resource "azurerm_kubernetes_cluster" "aks" {
   dns_prefix                = try(each.value.dns_prefix, [])
   automatic_channel_upgrade = try(each.value.channel_upgrade, null)
 
+  dynamic "auto_scaler_profile" {
+      for_each = {
+        for k, v in try(var.aks.auto_scaler_profile, {}) : k => v
+      }
+
+    content {
+      balance_similar_node_groups      = try(auto_scaler_profile.value.balance_similar_node_groups, false)
+      expander                         = try(auto_scaler_profile.value.expander, null)
+      max_graceful_termination_sec     = try(auto_scaler_profile.value.max_graceful_termination_sec, null)
+      max_node_provisioning_time       = try(auto_scaler_profile.value.max_node_provisioning_time, null)
+      max_unready_nodes                = try(auto_scaler_profile.value.max_unready_nodes, null)
+      max_unready_percentage           = try(auto_scaler_profile.value.max_unready_percentage, null)
+      new_pod_scale_up_delay           = try(auto_scaler_profile.value.new_pod_scale_up_delay, null)
+      scale_down_delay_after_add       = try(auto_scaler_profile.value.scale_down_delay_after_add, null)
+      scale_down_delay_after_delete    = try(auto_scaler_profile.value.scale_down_delay_after_delete, null)
+      scale_down_delay_after_failure   = try(auto_scaler_profile.value.scale_down_delay_after_failure, null)
+      scan_interval                    = try(auto_scaler_profile.value.scan_interval, null)
+      scale_down_unneeded              = try(auto_scaler_profile.value.scale_down_unneeded, null)
+      scale_down_unready               = try(auto_scaler_profile.value.scale_down_unready, null)
+      scale_down_utilization_threshold = try(auto_scaler_profile.value.scale_down_utilization_threshold, null)
+      empty_bulk_delete_max            = try(auto_scaler_profile.value.empty_bulk_delete_max, null)
+      skip_nodes_with_local_storage    = try(auto_scaler_profile.value.skip_nodes_with_local_storage, null)
+      skip_nodes_with_system_pods      = try(auto_scaler_profile.value.skip_nodes_with_system_pods, null)
+    }
+  }
+
   default_node_pool {
     name       = "default"
     vm_size    = each.value.default_node_pool.vmsize
@@ -35,7 +61,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     min_count  = try(each.value.default_node_pool.min_count, null)
     zones      = try(each.value.default_node_pool.zones, [])
 
-    enable_auto_scaling          = try(each.value.default_node_pool.enable.auto_scaling, false)
+    enable_auto_scaling          = try(each.value.default_node_pool.auto_scaling, false)
     enable_host_encryption       = try(each.value.default_node_pool.enable.host_encryption, false)
     enable_node_public_ip        = try(each.value.default_node_pool.enable.node_public_ip, false)
     fips_enabled                 = try(each.value.default_node_pool.enable.fips, null)
