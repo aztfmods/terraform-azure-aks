@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.4.0](https://github.com/aztfmods/module-azurerm-aks/compare/v1.3.0...v1.4.0) (2022-10-18)
+
+
+### Features
+
+* add autoscaler profile ([#19](https://github.com/aztfmods/module-azurerm-aks/issues/19)) ([f7e8026](https://github.com/aztfmods/module-azurerm-aks/commit/f7e802636bc19f932d1fb13b134e818a10469b94))
+* add node pool upgrade settings ([#17](https://github.com/aztfmods/module-azurerm-aks/issues/17)) ([a6e7936](https://github.com/aztfmods/module-azurerm-aks/commit/a6e7936f8f616249fa366193b83a332024732cfb))
+* add optional network profile ([#20](https://github.com/aztfmods/module-azurerm-aks/issues/20)) ([a317479](https://github.com/aztfmods/module-azurerm-aks/commit/a3174792238f1f8075b9d071500d439ec5520bdb))
+
 ## [1.3.0](https://github.com/aztfmods/module-azurerm-aks/compare/v1.2.0...v1.3.0) (2022-10-17)
 
 
