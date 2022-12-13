@@ -38,8 +38,8 @@ module "aks" {
       }
 
       node_pools = {
-        pool1 = { vmsize = "Standard_DS2_v2", count = 1, max_surge = 50 }
-        pool2 = { vmsize = "Standard_DS2_v2", count = 1, max_surge = 50 }
+        pool1 = { vmsize = "Standard_DS2_v2", node_count = 1, max_surge = 50 }
+        pool2 = { vmsize = "Standard_DS2_v2", node_count = 1, max_surge = 50 }
       }
     }
   }
