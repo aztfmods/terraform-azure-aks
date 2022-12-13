@@ -15,7 +15,7 @@ data "azurerm_resource_group" "rg" {
 resource "azurerm_kubernetes_cluster" "aks" {
   for_each = var.aks
 
-  name                = "aks-${var.naming.company}-${each.key}-${var.naming.env}-${var.naming.region}"
+  name                = "aks-${var.company}-${each.key}-${var.env}-${var.region}"
   resource_group_name = data.azurerm_resource_group.rg[each.key].name
   location            = data.azurerm_resource_group.rg[each.key].location
 
