@@ -22,14 +22,24 @@ module "aks" {
   region  = module.global.region
 
   aks = {
-    demo = {
+    aks1 = {
       location            = module.global.groups.demo.location
       resourcegroup       = module.global.groups.demo.name
       node_resource_group = "${module.global.groups.demo.name}-node"
 
       default_node_pool = {
         vmsize     = "Standard_DS2_v2"
-        zones      = [1, 2, 3]
+        node_count = 1
+      }
+    }
+
+    aks2 = {
+      location            = module.global.groups.demo.location
+      resourcegroup       = module.global.groups.demo.name
+      node_resource_group = "${module.global.groups.demo.name}-node"
+
+      default_node_pool = {
+        vmsize     = "Standard_DS2_v2"
         node_count = 1
       }
     }

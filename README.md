@@ -6,39 +6,34 @@ Terraform module which creates kubernetes resources on Azure.
 
 The below features are made available:
 
-- [multiple](#usage-multiple-kubernetes-clusters) aks clusters
-- [node pool](#usage-single-kubernetes-cluster-multiple-node-pools) support on each cluster
+- [multiple](examples/multiple/main.tf) aks clusters
+- [node pool](examples/node-pools/main.tf) support on each cluster
 - [terratest](https://terratest.gruntwork.io) is used to validate different integrations
 - [diagnostic](examples/diagnostic-settings/main.tf) logs integration
 
 The below examples shows the usage when consuming the module:
 
-## Usage: single kubernetes cluster multiple node pools
+## Usage: simple
 
 ```hcl
 module "aks" {
-  source = "github.com/dkooll/terraform-azurerm-aks"
+  source = "../../"
 
-  naming = {
-    company = local.naming.company
-    env     = local.naming.env
-    region  = local.naming.region
-  }
+  company = module.global.company
+  env     = module.global.env
+  region  = module.global.region
 
   aks = {
     demo = {
-      location      = module.global.groups.aks.location
-      resourcegroup = module.global.groups.aks.name
+      location            = module.global.groups.demo.location
+      resourcegroup       = module.global.groups.demo.name
+      node_resource_group = "${module.global.groups.demo.name}-node"
 
       default_node_pool = {
         vmsize     = "Standard_DS2_v2"
         zones      = [1, 2, 3]
         node_count = 1
-      }
-
-      node_pools = {
-        pool1 = { vmsize = "Standard_DS2_v2", count = 1 }
-        pool2 = { vmsize = "Standard_DS2_v2", count = 1 }
+        max_surge  = 50
       }
     }
   }
@@ -46,40 +41,39 @@ module "aks" {
 }
 ```
 
-## Usage: multiple kubernetes clusters
+## Usage: node pools
 
 ```hcl
 module "aks" {
-  source = "github.com/dkooll/terraform-azurerm-aks"
+  source = "../../"
 
-  naming = {
-    company = local.naming.company
-    env     = local.naming.env
-    region  = local.naming.region
-  }
+  company = module.global.company
+  env     = module.global.env
+  region  = module.global.region
 
   aks = {
-    aks1 = {
-      location      = module.global.groups.aks.location
-      resourcegroup = module.global.groups.aks.name
+    demo = {
+      location            = module.global.groups.demo.location
+      resourcegroup       = module.global.groups.demo.name
+      node_resource_group = "${module.global.groups.demo.name}-node"
+      channel_upgrade     = "stable"
+      dns_prefix          = "aksdemo"
+      version             = 1.22
 
       default_node_pool = {
         vmsize     = "Standard_DS2_v2"
         zones      = [1, 2, 3]
         node_count = 1
+        max_surge  = 50
       }
-    }
 
-    aks2 = {
-      location      = module.global.groups.aks.location
-      resourcegroup = module.global.groups.aks.name
-
-      default_node_pool = {
-        vmsize     = "Standard_DS2_v2"
-        node_count = 1
+      node_pools = {
+        pool1 = { vmsize = "Standard_DS2_v2", count = 1, max_surge = 50 }
+        pool2 = { vmsize = "Standard_DS2_v2", count = 1, max_surge = 50 }
       }
     }
   }
+  depends_on = [module.global]
 }
 ```
 
@@ -102,7 +96,9 @@ module "aks" {
 | Name | Description | Type | Required |
 | :-- | :-- | :-- | :-- |
 | `aks` | describes aks related configuration | object | yes |
-| `naming` | contains naming convention | string | yes |
+| `company` | contains the company name used, for naming convention	| string | yes |
+| `region` | contains the shortname of the region, used for naming convention	| string | yes |
+| `env` | contains shortname of the environment used for naming convention	| string | yes |
 
 ## Outputs
 
