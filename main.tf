@@ -23,7 +23,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   sku_tier                  = try(each.value.sku, "Free")
   node_resource_group       = try(each.value.node_resource_group, [])
   azure_policy_enabled      = try(each.value.enable.azure_policy, false)
-  dns_prefix                = try(each.value.dns_prefix, [])
+  dns_prefix                = each.value.dns_prefix
   automatic_channel_upgrade = try(each.value.channel_upgrade, null)
 
   #network profile
@@ -147,4 +147,20 @@ resource "azurerm_kubernetes_cluster_node_pool" "pools" {
       max_surge = each.value.upgrade_settings.max_surge
     }
   }
+}
+
+#----------------------------------------------------------------------------------------
+# role assignment
+#----------------------------------------------------------------------------------------
+
+resource "azurerm_role_assignment" "role" {
+  for_each = {
+    for k, v in var.aks : k => v
+    if try(v.registry.attach, {}) == true
+  }
+
+  principal_id                     = azurerm_kubernetes_cluster.aks[each.key].kubelet_identity[0].object_id
+  role_definition_name             = "AcrPull"
+  scope                            = each.value.registry.role_assignment_scope
+  skip_service_principal_aad_check = true
 }

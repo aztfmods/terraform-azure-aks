@@ -10,6 +10,7 @@ The below features are made available:
 - [node pool](examples/node-pools/main.tf) support on each cluster
 - [terratest](https://terratest.gruntwork.io) is used to validate different integrations
 - [diagnostic](examples/diagnostic-settings/main.tf) logs integration
+- [container registry](examples/container-registry/main.tf) integration
 
 The below examples shows the usage when consuming the module:
 
@@ -33,7 +34,6 @@ module "aks" {
         vmsize     = "Standard_DS2_v2"
         zones      = [1, 2, 3]
         node_count = 1
-        max_surge  = 50
       }
     }
   }
@@ -64,12 +64,15 @@ module "aks" {
         vmsize     = "Standard_DS2_v2"
         zones      = [1, 2, 3]
         node_count = 1
-        max_surge  = 50
+
+        upgrade_settings = {
+          max_surge = 50
+        }
       }
 
       node_pools = {
-        pool1 = { vmsize = "Standard_DS2_v2", count = 1, max_surge = 50 }
-        pool2 = { vmsize = "Standard_DS2_v2", count = 1, max_surge = 50 }
+        pool1 = { vmsize = "Standard_DS2_v2", node_count = 1, max_surge = 50 }
+        pool2 = { vmsize = "Standard_DS2_v2", node_count = 1, max_surge = 50 }
       }
     }
   }
@@ -84,6 +87,7 @@ module "aks" {
 | [azurerm_resource_group](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) | resource |
 | [azurerm_kubernetes_cluster](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster) | resource |
 | [azurerm_kubernetes_cluster_node_pool](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster_node_pool) | resource |
+| [azurerm_role_assignment](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
 
 ## Data Sources
 
