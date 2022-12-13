@@ -46,7 +46,7 @@ module "aks" {
       dns_prefix          = "demo"
 
       registry = {
-        attach = false, role_assignment_scope = module.acr.acr.demo.id
+        attach = true, role_assignment_scope = module.acr.acr.demo.id
       }
 
       default_node_pool = {

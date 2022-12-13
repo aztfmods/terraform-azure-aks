@@ -156,12 +156,11 @@ resource "azurerm_kubernetes_cluster_node_pool" "pools" {
 resource "azurerm_role_assignment" "role" {
   for_each = {
     for k, v in var.aks : k => v
-    if try(v.registry, {}) == true
+    if try(v.registry.attach, {}) == true
   }
 
-  principal_id         = azurerm_kubernetes_cluster.aks[each.key].kubelet_identity[0].object_id
-  role_definition_name = "AcrPull"
-  # scope                            = each.value.role_assignment_scope
-  scope                            = each.value.role_assignment.scope
+  principal_id                     = azurerm_kubernetes_cluster.aks[each.key].kubelet_identity[0].object_id
+  role_definition_name             = "AcrPull"
+  scope                            = each.value.registry.role_assignment_scope
   skip_service_principal_aad_check = true
 }
