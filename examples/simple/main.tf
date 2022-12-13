@@ -2,38 +2,30 @@ provider "azurerm" {
   features {}
 }
 
-locals {
-  naming = {
-    company = "cn"
-    env     = "p"
-    region  = "weu"
-  }
-}
-
 module "global" {
   source = "github.com/aztfmods/module-azurerm-global"
+
+  company = "cn"
+  env     = "p"
+  region  = "weu"
+
   rgs = {
-    aks = {
-      name     = "rg-${local.naming.company}-aks-${local.naming.env}-${local.naming.region}"
-      location = "westeurope"
-    }
+    demo = { location = "westeurope" }
   }
 }
 
 module "aks" {
   source = "../../"
 
-  naming = {
-    company = local.naming.company
-    env     = local.naming.env
-    region  = local.naming.region
-  }
+  company = module.global.company
+  env     = module.global.env
+  region  = module.global.region
 
   aks = {
     demo = {
-      location            = module.global.groups.aks.location
-      resourcegroup       = module.global.groups.aks.name
-      node_resource_group = "${module.global.groups.aks.name}-node"
+      location            = module.global.groups.demo.location
+      resourcegroup       = module.global.groups.demo.name
+      node_resource_group = "${module.global.groups.demo.name}-node"
       channel_upgrade     = "stable"
       dns_prefix          = "aksdemo"
       version             = 1.22

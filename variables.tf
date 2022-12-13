@@ -1,2 +1,4 @@
 variable "aks" {}
-variable "naming" {}
+variable "company" {}
+variable "region" {}
+variable "env" {}
