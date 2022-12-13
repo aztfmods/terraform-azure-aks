@@ -93,7 +93,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
     dynamic "upgrade_settings" {
       for_each = {
-        for k, v in var.aks : k => v
+        for k, v in try(each.value.node_pools.upgrade_settings, {}) : k => v
       }
 
       content {
@@ -140,11 +140,11 @@ resource "azurerm_kubernetes_cluster_node_pool" "pools" {
 
   dynamic "upgrade_settings" {
     for_each = {
-      for pool in local.aks_pools : "${pool.aks_key}.${pool.pools_key}" => pool
+      for k, v in try(each.value.node_pools, {}) : k => v
     }
 
     content {
-      max_surge = each.value.max_surge
+      max_surge = each.value.upgrade_settings.max_surge
     }
   }
 }

@@ -30,7 +30,6 @@ module "aks" {
       default_node_pool = {
         vmsize     = "Standard_DS2_v2"
         node_count = 1
-        max_surge  = 50
       }
     }
 
@@ -42,7 +41,6 @@ module "aks" {
       default_node_pool = {
         vmsize     = "Standard_DS2_v2"
         node_count = 1
-        max_surge  = 50
       }
     }
   }

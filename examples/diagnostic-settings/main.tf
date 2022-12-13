@@ -49,11 +49,6 @@ module "aks" {
         zones      = [1, 2, 3]
         node_count = 1
       }
-
-      node_pools = {
-        pool1 = { vmsize = "Standard_DS2_v2", count = 1 }
-        pool2 = { vmsize = "Standard_DS2_v2", count = 1 }
-      }
     }
   }
   depends_on = [module.global]

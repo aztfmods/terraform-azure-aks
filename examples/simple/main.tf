@@ -31,7 +31,6 @@ module "aks" {
         vmsize     = "Standard_DS2_v2"
         zones      = [1, 2, 3]
         node_count = 1
-        max_surge  = 50
       }
     }
   }
