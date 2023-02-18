@@ -1,16 +1,14 @@
-![example workflow](https://github.com/aztfmods/module-azurerm-aks/actions/workflows/validate.yml/badge.svg)
-
 # Kubernetes Service
 
-Terraform module which creates kubernetes resources on Azure.
+This terraform module simplifies the creation and management of kubernetes resources on Azure, offering customizable options for cluster, node pool, network settings, and add-ons to ensure efficient deployment of kubernetes clusters.
 
 The below features are made available:
 
-- [multiple](examples/multiple/main.tf) aks clusters
-- [node pool](examples/node-pools/main.tf) support on each cluster
-- [terratest](https://terratest.gruntwork.io) is used to validate different integrations
-- [diagnostic](examples/diagnostic-settings/main.tf) logs integration
-- [container registry](examples/container-registry/main.tf) integration
+- multiple aks clusters
+- node pool support on each cluster
+- terratest is used to validate different integrations
+- diagnostic logs integration
+- container registry integration
 
 The below examples shows the usage when consuming the module:
 
