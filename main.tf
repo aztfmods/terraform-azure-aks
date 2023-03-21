@@ -1,32 +1,20 @@
 #----------------------------------------------------------------------------------------
-# resourcegroups
-#----------------------------------------------------------------------------------------
-
-data "azurerm_resource_group" "rg" {
-  for_each = var.aks
-
-  name = each.value.resourcegroup
-}
-
-#----------------------------------------------------------------------------------------
 # aks cluster
 #----------------------------------------------------------------------------------------
 
 resource "azurerm_kubernetes_cluster" "aks" {
-  for_each = var.aks
 
-  name                = "aks-${var.company}-${each.key}-${var.env}-${var.region}"
-  resource_group_name = data.azurerm_resource_group.rg[each.key].name
-  location            = data.azurerm_resource_group.rg[each.key].location
+  name                = "aks-${var.company}-${var.env}-${var.region}"
+  resource_group_name = var.aks.resourcegroup
+  location            = var.aks.location
 
-  kubernetes_version        = try(each.value.version, null)
-  sku_tier                  = try(each.value.sku, "Free")
-  node_resource_group       = try(each.value.node_resource_group, [])
-  azure_policy_enabled      = try(each.value.enable.azure_policy, false)
-  dns_prefix                = each.value.dns_prefix
-  automatic_channel_upgrade = try(each.value.channel_upgrade, null)
+  kubernetes_version        = try(var.aks.version, null)
+  sku_tier                  = try(var.aks.sku, "Free")
+  node_resource_group       = try(var.aks.node_resource_group, [])
+  azure_policy_enabled      = try(var.aks.enable.azure_policy, false)
+  dns_prefix                = try(var.aks.dns_prefix, false)
+  automatic_channel_upgrade = try(var.aks.channel_upgrade, null)
 
-  #network profile
   dynamic "network_profile" {
     for_each = {
       for k, v in try(var.aks.network_profile, {}) : k => v
@@ -45,7 +33,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
     }
   }
 
-  #auto scaler profile
   dynamic "auto_scaler_profile" {
     for_each = {
       for k, v in try(var.aks.auto_scaler_profile, {}) : k => v
@@ -72,32 +59,31 @@ resource "azurerm_kubernetes_cluster" "aks" {
     }
   }
 
-  #default node pool
   default_node_pool {
     name       = "default"
-    vm_size    = each.value.default_node_pool.vmsize
-    node_count = each.value.default_node_pool.node_count
-    max_count  = try(each.value.default_node_pool.max_count, null)
-    max_pods   = try(each.value.default_node_pool.max_pods, 30)
-    min_count  = try(each.value.default_node_pool.min_count, null)
-    zones      = try(each.value.default_node_pool.zones, [])
+    vm_size    = var.aks.default_node_pool.vmsize
+    node_count = var.aks.default_node_pool.node_count
+    max_count  = try(var.aks.default_node_pool.max_count, null)
+    max_pods   = try(var.aks.default_node_pool.max_pods, 30)
+    min_count  = try(var.aks.default_node_pool.min_count, null)
+    zones      = try(var.aks.default_node_pool.zones, [])
 
-    enable_auto_scaling          = try(each.value.default_node_pool.auto_scaling, false)
-    enable_host_encryption       = try(each.value.default_node_pool.enable.host_encryption, false)
-    enable_node_public_ip        = try(each.value.default_node_pool.enable.node_public_ip, false)
-    fips_enabled                 = try(each.value.default_node_pool.enable.fips, null)
-    only_critical_addons_enabled = try(each.value.default_node_pool.enable.only_critical_addons, false)
-    node_labels                  = try(each.value.default_node_pool.node_labels, null)
-    os_sku                       = try(each.value.default_node_pool.os_sku, null)
-    type                         = try(each.value.default_node_pool.type, "VirtualMachineScaleSets")
+    enable_auto_scaling          = try(var.aks.default_node_pool.auto_scaling, false)
+    enable_host_encryption       = try(var.aks.default_node_pool.enable.host_encryption, false)
+    enable_node_public_ip        = try(var.aks.default_node_pool.enable.node_public_ip, false)
+    fips_enabled                 = try(var.aks.default_node_pool.enable.fips, null)
+    only_critical_addons_enabled = try(var.aks.default_node_pool.enable.only_critical_addons, false)
+    node_labels                  = try(var.aks.default_node_pool.node_labels, null)
+    os_sku                       = try(var.aks.default_node_pool.os_sku, null)
+    type                         = try(var.aks.default_node_pool.type, "VirtualMachineScaleSets")
 
     dynamic "upgrade_settings" {
       for_each = {
-        for k, v in try(each.value.node_pools.upgrade_settings, {}) : k => v
+        for k, v in try(var.aks.node_pools.upgrade_settings, {}) : k => v
       }
 
       content {
-        max_surge = each.value.default_node_pool.max_surge
+        max_surge = upgrade_settings.value.default_node_pool.max_surge
       }
     }
   }
@@ -113,7 +99,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
 resource "azurerm_kubernetes_cluster_node_pool" "pools" {
   for_each = {
-    for pools in local.aks_pools : "${pools.aks_key}.${pools.pools_key}" => pools
+    for pools in local.aks_pools : pools.pools_key => pools
   }
 
   name                  = each.value.poolname
@@ -154,13 +140,10 @@ resource "azurerm_kubernetes_cluster_node_pool" "pools" {
 #----------------------------------------------------------------------------------------
 
 resource "azurerm_role_assignment" "role" {
-  for_each = {
-    for k, v in var.aks : k => v
-    if try(v.registry.attach, {}) == true
-  }
+  for_each = var.aks.registry["attach"] ? { "attach" = true } : {}
 
-  principal_id                     = azurerm_kubernetes_cluster.aks[each.key].kubelet_identity[0].object_id
+  principal_id                     = azurerm_kubernetes_cluster.aks.kubelet_identity[0].object_id
   role_definition_name             = "AcrPull"
-  scope                            = each.value.registry.role_assignment_scope
+  scope                            = var.aks.registry.role_assignment_scope
   skip_service_principal_aad_check = true
 }

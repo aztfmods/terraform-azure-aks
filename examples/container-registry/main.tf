@@ -22,11 +22,9 @@ module "acr" {
   region  = module.global.region
 
   registry = {
-    demo = {
-      location      = module.global.groups.demo.location
-      resourcegroup = module.global.groups.demo.name
-      sku           = "Premium"
-    }
+    location      = module.global.groups.demo.location
+    resourcegroup = module.global.groups.demo.name
+    sku           = "Premium"
   }
   depends_on = [module.global]
 }
@@ -39,21 +37,18 @@ module "aks" {
   region  = module.global.region
 
   aks = {
-    demo = {
-      location            = module.global.groups.demo.location
-      resourcegroup       = module.global.groups.demo.name
-      node_resource_group = "${module.global.groups.demo.name}-node"
-      dns_prefix          = "demo"
+    location            = module.global.groups.demo.location
+    resourcegroup       = module.global.groups.demo.name
+    node_resource_group = "${module.global.groups.demo.name}-node"
+    dns_prefix          = "demo"
 
-      registry = {
-        attach = true, role_assignment_scope = module.acr.acr.demo.id
-      }
+    registry = {
+      attach = true, role_assignment_scope = module.acr.acr.id
+    }
 
-      default_node_pool = {
-        vmsize     = "Standard_DS2_v2"
-        node_count = 1
-      }
-
+    default_node_pool = {
+      vmsize     = "Standard_DS2_v2"
+      node_count = 1
     }
   }
   depends_on = [module.global]
