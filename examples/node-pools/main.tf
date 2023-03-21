@@ -39,8 +39,30 @@ module "aks" {
     }
 
     node_pools = {
-      pool1 = { vmsize = "Standard_DS2_v2", node_count = 1, max_surge = 50 }
-      pool2 = { vmsize = "Standard_DS2_v2", node_count = 1, max_surge = 50 }
+      pool1 = {
+        vmsize     = "Standard_DS2_v2"
+        node_count = 1
+        max_surge  = 50
+        linux_os_config = {
+          sysctl_config = {
+            fs_nr_open        = "1048576"
+            fs_aio_max_nr     = "1048576"
+            net_core_wmem_max = "1048576"
+            vm_max_map_count  = "242144"
+          }
+        }
+      }
+      pool2 = {
+        vmsize     = "Standard_DS2_v2"
+        node_count = 1
+        max_surge  = 50
+        linux_os_config = {
+          sysctl_config = {
+            fs_nr_open        = "1048576"
+            fs_aio_max_nr     = "1048576"
+          }
+        }
+      }
     }
   }
   depends_on = [module.global]
