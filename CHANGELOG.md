@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/aztfmods/module-azurerm-aks/compare/v1.6.0...v1.7.0) (2023-03-21)
+
+
+### Features
+
+* add linux_profile support ([#55](https://github.com/aztfmods/module-azurerm-aks/issues/55)) ([b7237d9](https://github.com/aztfmods/module-azurerm-aks/commit/b7237d90242196117c501a84afaea01963932808))
+
 ## [1.6.0](https://github.com/aztfmods/module-azurerm-aks/compare/v1.5.0...v1.6.0) (2023-03-21)
 
 
