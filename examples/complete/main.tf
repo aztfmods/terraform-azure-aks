@@ -51,6 +51,10 @@ module "aks" {
     oms_agent = {
       workspace_id = module.analytics.law.id
     }
+
+    linux_profile = {
+      username = "nodeadmin"
+    }
   }
   depends_on = [module.global]
 }

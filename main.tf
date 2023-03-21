@@ -68,6 +68,21 @@ resource "azurerm_kubernetes_cluster" "aks" {
     }
   }
 
+  dynamic "linux_profile" {
+    for_each = try(var.aks.linux_profile, null) != null ? { "default" = var.aks.linux_profile } : {}
+
+    content {
+      admin_username = try(linux_profile.value.username, "nodeadmin")
+
+      dynamic "ssh_key" {
+        for_each = try(var.aks.linux_profile, null) != null ? { "default" = var.aks.linux_profile } : {}
+        content {
+          key_data = tls_private_key.tls[ssh_key.key].public_key_openssh
+        }
+      }
+    }
+  }
+
   default_node_pool {
     name       = "default"
     vm_size    = var.aks.default_node_pool.vmsize
@@ -234,6 +249,17 @@ resource "azurerm_kubernetes_cluster_node_pool" "pools" {
       transparent_huge_page_enabled = try(linux_os_config.value.transparent_huge_page_enabled, null)
     }
   }
+}
+
+#----------------------------------------------------------------------------------------
+# tls key
+#----------------------------------------------------------------------------------------
+
+resource "tls_private_key" "tls" {
+  for_each = try(var.aks.linux_profile, null) != null ? { "default" = var.aks.linux_profile } : {}
+
+  algorithm = try(each.value.algorithm, "RSA")
+  rsa_bits  = try(each.value.rsa_bits, 4096)
 }
 
 #----------------------------------------------------------------------------------------
