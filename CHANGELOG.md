@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.0](https://github.com/aztfmods/module-azurerm-aks/compare/v1.5.0...v1.6.0) (2023-03-21)
+
+
+### Features
+
+* add linux os config support for default and non default nodes pools ([#52](https://github.com/aztfmods/module-azurerm-aks/issues/52)) ([9c5e34d](https://github.com/aztfmods/module-azurerm-aks/commit/9c5e34d0c9d84e4c2b541bdcf95c5b98d23c45ac))
+* add oms_agent support ([#54](https://github.com/aztfmods/module-azurerm-aks/issues/54)) ([2f77a92](https://github.com/aztfmods/module-azurerm-aks/commit/2f77a92a8234b2c1d2329e96ae81c39ca8639519))
+
 ## [1.5.0](https://github.com/aztfmods/module-azurerm-aks/compare/v1.4.0...v1.5.0) (2023-03-21)
 
 
