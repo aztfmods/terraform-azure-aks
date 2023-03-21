@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.5.0](https://github.com/aztfmods/module-azurerm-aks/compare/v1.4.0...v1.5.0) (2023-03-21)
+
+
+### Features
+
+* add node_pool and multiple aks cluster examples ([#42](https://github.com/aztfmods/module-azurerm-aks/issues/42)) ([f3ed63f](https://github.com/aztfmods/module-azurerm-aks/commit/f3ed63f135640556d7b9c534b3fcd489b75a77b4))
+* simplify structure ([#51](https://github.com/aztfmods/module-azurerm-aks/issues/51)) ([cefc9e4](https://github.com/aztfmods/module-azurerm-aks/commit/cefc9e44386f9ec6521de725f6433c0c64bcd162))
+* small refactor naming convention ([#40](https://github.com/aztfmods/module-azurerm-aks/issues/40)) ([647a9f8](https://github.com/aztfmods/module-azurerm-aks/commit/647a9f8910c91aa458303f7bd6fe00d2f937f281))
+
 ## [1.4.0](https://github.com/aztfmods/module-azurerm-aks/compare/v1.3.0...v1.4.0) (2022-10-18)
 
 
