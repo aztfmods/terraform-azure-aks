@@ -59,6 +59,15 @@ resource "azurerm_kubernetes_cluster" "aks" {
     }
   }
 
+  dynamic "oms_agent" {
+    for_each = try(var.aks.oms_agent, null) != null ? { "default" = var.aks.oms_agent } : {}
+
+    content {
+      log_analytics_workspace_id      = oms_agent.value.workspace_id
+      msi_auth_for_monitoring_enabled = try(oms_agent.value.msi_auth_for_monitoring_enabled, false)
+    }
+  }
+
   default_node_pool {
     name       = "default"
     vm_size    = var.aks.default_node_pool.vmsize

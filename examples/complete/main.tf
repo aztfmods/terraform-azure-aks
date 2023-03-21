@@ -14,6 +14,22 @@ module "global" {
   }
 }
 
+module "analytics" {
+  source = "github.com/aztfmods/module-azurerm-law"
+
+  company = module.global.company
+  env     = module.global.env
+  region  = module.global.region
+
+  law = {
+    location      = module.global.groups.demo.location
+    resourcegroup = module.global.groups.demo.name
+    sku           = "PerGB2018"
+    retention     = 90
+  }
+  depends_on = [module.global]
+}
+
 module "aks" {
   source = "../../"
 
@@ -30,6 +46,10 @@ module "aks" {
       vmsize     = "Standard_DS2_v2"
       zones      = [1, 2, 3]
       node_count = 1
+    }
+
+    oms_agent = {
+      workspace_id = module.analytics.law.id
     }
   }
   depends_on = [module.global]
