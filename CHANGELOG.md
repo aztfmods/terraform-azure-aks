@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0](https://github.com/aztfmods/module-azurerm-aks/compare/v1.7.0...v1.8.0) (2023-03-22)
+
+
+### Features
+
+* add kubelet_config support for default and non default node pools ([#57](https://github.com/aztfmods/module-azurerm-aks/issues/57)) ([b8f3f1a](https://github.com/aztfmods/module-azurerm-aks/commit/b8f3f1aef1f1b5f50382b5a9f2244d349dd0ee1d))
+
 ## [1.7.0](https://github.com/aztfmods/module-azurerm-aks/compare/v1.6.0...v1.7.0) (2023-03-21)
 
 
