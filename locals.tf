@@ -7,7 +7,8 @@ locals {
       max_surge       = pools.max_surge
       poolname        = "aks${pools_key}"
       aks_cluster_id  = azurerm_kubernetes_cluster.aks.id
-      linux_os_config = try(pools.linux_os_config, {})
+      linux_os_config = try(pools.config.linux_os, {})
+      kubelet_config  = try(pools.config.kubelet, {})
     }
   ])
 }

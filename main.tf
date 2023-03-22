@@ -112,7 +112,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     }
 
     dynamic "linux_os_config" {
-      for_each = length(try(var.aks.default_node_pool.linux_os_config, {})) > 0 ? { "default" = var.aks.default_node_pool.linux_os_config } : {}
+      for_each = length(try(var.aks.default_node_pool.config.linux_os, {})) > 0 ? { "default" = var.aks.default_node_pool.config.linux_os } : {}
 
       content {
         swap_file_size_mb = try(linux_os_config.value.swap_file_size_mb, null)
@@ -153,6 +153,23 @@ resource "azurerm_kubernetes_cluster" "aks" {
         }
         transparent_huge_page_defrag  = try(linux_os_config.value.transparent_huge_page_defrag, null)
         transparent_huge_page_enabled = try(linux_os_config.value.transparent_huge_page_enabled, null)
+      }
+    }
+
+    dynamic "kubelet_config" {
+      for_each = try(var.aks.default_node_pool.config.kubelet, null) != null ? { "default" = var.aks.default_node_pool.config.kubelet } : {}
+
+      content {
+        allowed_unsafe_sysctls    = try(kubelet_config.value.allowed_unsafe_sysctls, null)
+        container_log_max_line    = try(kubelet_config.value.container_log_max_line, null)
+        container_log_max_size_mb = try(kubelet_config.value.container_log_max_size_mb, null)
+        cpu_cfs_quota_enabled     = try(kubelet_config.value.cpu_cfs_quota_enabled, null)
+        cpu_cfs_quota_period      = try(kubelet_config.value.cpu_cfs_quota_period, null)
+        cpu_manager_policy        = try(kubelet_config.value.cpu_manager_policy, null)
+        image_gc_high_threshold   = try(kubelet_config.value.image_gc_high_threshold, null)
+        image_gc_low_threshold    = try(kubelet_config.value.image_gc_low_threshold, null)
+        pod_max_pid               = try(kubelet_config.value.pod_max_pid, null)
+        topology_manager_policy   = try(kubelet_config.value.topology_manager_policy, null)
       }
     }
   }
@@ -247,6 +264,25 @@ resource "azurerm_kubernetes_cluster_node_pool" "pools" {
       }
       transparent_huge_page_defrag  = try(linux_os_config.value.transparent_huge_page_defrag, null)
       transparent_huge_page_enabled = try(linux_os_config.value.transparent_huge_page_enabled, null)
+    }
+  }
+
+  dynamic "kubelet_config" {
+    for_each = {
+      config = each.value.kubelet_config
+    }
+
+    content {
+      allowed_unsafe_sysctls    = try(kubelet_config.value.allowed_unsafe_sysctls, null)
+      container_log_max_line    = try(kubelet_config.value.container_log_max_line, null)
+      container_log_max_size_mb = try(kubelet_config.value.container_log_max_size_mb, null)
+      cpu_cfs_quota_enabled     = try(kubelet_config.value.cpu_cfs_quota_enabled, null)
+      cpu_cfs_quota_period      = try(kubelet_config.value.cpu_cfs_quota_period, null)
+      cpu_manager_policy        = try(kubelet_config.value.cpu_manager_policy, null)
+      image_gc_high_threshold   = try(kubelet_config.value.image_gc_high_threshold, null)
+      image_gc_low_threshold    = try(kubelet_config.value.image_gc_low_threshold, null)
+      pod_max_pid               = try(kubelet_config.value.pod_max_pid, null)
+      topology_manager_policy   = try(kubelet_config.value.topology_manager_policy, null)
     }
   }
 }
