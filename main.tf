@@ -1,7 +1,4 @@
-#----------------------------------------------------------------------------------------
 # aks cluster
-#----------------------------------------------------------------------------------------
-
 resource "azurerm_kubernetes_cluster" "aks" {
 
   name                = "aks-${var.company}-${var.env}-${var.region}"
@@ -179,10 +176,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 }
 
-#----------------------------------------------------------------------------------------
 # node pools
-#----------------------------------------------------------------------------------------
-
 resource "azurerm_kubernetes_cluster_node_pool" "pools" {
   for_each = {
     for pools in local.aks_pools : pools.pools_key => pools
@@ -287,10 +281,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "pools" {
   }
 }
 
-#----------------------------------------------------------------------------------------
 # tls key
-#----------------------------------------------------------------------------------------
-
 resource "tls_private_key" "tls" {
   for_each = try(var.aks.linux_profile, null) != null ? { "default" = var.aks.linux_profile } : {}
 
@@ -298,10 +289,7 @@ resource "tls_private_key" "tls" {
   rsa_bits  = try(each.value.rsa_bits, 4096)
 }
 
-#----------------------------------------------------------------------------------------
 # role assignment
-#----------------------------------------------------------------------------------------
-
 resource "azurerm_role_assignment" "role" {
   for_each = try(var.aks.registry["attach"], false) ? { "attach" = true } : {}
 
