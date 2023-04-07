@@ -10,8 +10,7 @@ module "global" {
   region  = "weu"
 
   rgs = {
-    aks  = { location = "westeurope" }
-    node = { location = "westeurope" }
+    aks = { location = "westeurope" }
   }
 }
 
@@ -25,7 +24,7 @@ module "aks" {
   aks = {
     location            = module.global.groups.aks.location
     resourcegroup       = module.global.groups.aks.name
-    node_resource_group = module.global.groups.node.name
+    node_resource_group = "${module.global.groups.aks.name}-node"
     channel_upgrade     = "stable"
     dns_prefix          = "aksdemo"
 
@@ -44,8 +43,9 @@ module "aks" {
           cpu_manager_policy     = "static"
         }
       }
-      vmsize = "Standard_DS2_v2"
-      zones  = [1, 2, 3]
+      vmsize           = "Standard_DS2_v2"
+      zones            = [1, 2, 3]
+      workload_runtime = "OCIContainer"
     }
 
     node_pools = {
@@ -68,6 +68,7 @@ module "aks" {
             cpu_manager_policy     = "static"
           }
         }
+        workload_runtime = "OCIContainer"
       }
       pool2 = {
         vmsize     = "Standard_DS2_v2"

@@ -97,6 +97,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     node_labels                  = try(var.aks.default_node_pool.node_labels, null)
     os_sku                       = try(var.aks.default_node_pool.os_sku, null)
     type                         = try(var.aks.default_node_pool.type, "VirtualMachineScaleSets")
+    workload_runtime             = try(var.aks.default_node_pool.workload_runtime, null)
 
     dynamic "upgrade_settings" {
       for_each = {
@@ -203,6 +204,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "pools" {
   os_sku                 = try(each.value.os_sku, null)
   os_type                = try(each.value.os_type, null)
   priority               = try(each.value.priority, null)
+  workload_runtime       = each.value.workload_runtime
 
   dynamic "upgrade_settings" {
     for_each = {
