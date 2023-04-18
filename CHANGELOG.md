@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.9.0](https://github.com/aztfmods/module-azurerm-aks/compare/v1.8.0...v1.9.0) (2023-04-18)
+
+
+### Features
+
+* add windows profile support ([#63](https://github.com/aztfmods/module-azurerm-aks/issues/63)) ([3d02d98](https://github.com/aztfmods/module-azurerm-aks/commit/3d02d987ec2121a04ed60ed999e73b5e6a14a001))
+* add workload runtime support to default and non default pools ([#59](https://github.com/aztfmods/module-azurerm-aks/issues/59)) ([e717d94](https://github.com/aztfmods/module-azurerm-aks/commit/e717d944d3f9c0e69738d6175c0a187c8aa2498b))
+
 ## [1.8.0](https://github.com/aztfmods/module-azurerm-aks/compare/v1.7.0...v1.8.0) (2023-03-22)
 
 
