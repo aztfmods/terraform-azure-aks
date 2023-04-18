@@ -65,16 +65,25 @@ resource "azurerm_kubernetes_cluster" "aks" {
     }
   }
 
+  dynamic "windows_profile" {
+    for_each = try(var.aks.profile.windows, null) != null ? { "default" = var.aks.profile.windows } : {}
+
+    content {
+      admin_username = try(windows_profile.value.username, "admin")
+      admin_password = try(windows_profile.value.password, null)
+    }
+  }
+
   dynamic "linux_profile" {
-    for_each = try(var.aks.linux_profile, null) != null ? { "default" = var.aks.linux_profile } : {}
+    for_each = try(var.aks.profile.linux, null) != null ? { "default" = var.aks.profile.linux } : {}
 
     content {
       admin_username = try(linux_profile.value.username, "nodeadmin")
 
       dynamic "ssh_key" {
-        for_each = try(var.aks.linux_profile, null) != null ? { "default" = var.aks.linux_profile } : {}
+        for_each = try(var.aks.profile.linux, null) != null ? { "default" = var.aks.profile.linux } : {}
         content {
-          key_data = tls_private_key.tls[ssh_key.key].public_key_openssh
+          key_data = linux_profile.value.ssh_key
         }
       }
     }
@@ -281,14 +290,6 @@ resource "azurerm_kubernetes_cluster_node_pool" "pools" {
       topology_manager_policy   = try(kubelet_config.value.topology_manager_policy, null)
     }
   }
-}
-
-# tls key
-resource "tls_private_key" "tls" {
-  for_each = try(var.aks.linux_profile, null) != null ? { "default" = var.aks.linux_profile } : {}
-
-  algorithm = try(each.value.algorithm, "RSA")
-  rsa_bits  = try(each.value.rsa_bits, 4096)
 }
 
 # role assignment
