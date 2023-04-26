@@ -65,6 +65,19 @@ resource "azurerm_kubernetes_cluster" "aks" {
     }
   }
 
+  dynamic "workload_autoscaler_profile" {
+    for_each = try(var.aks.profile.autoscaler, null) != null ? { "default" = var.aks.profile.autoscaler } : {}
+
+    content {
+      # feature flag needs to be enabled
+      # https://learn.microsoft.com/en-gb/azure/aks/keda-deploy-add-on-arm#register-the-aks-kedapreview-feature-flag
+      # https://learn.microsoft.com/en-us/azure/aks/vertical-pod-autoscaler#register-the-aks-vpapreview-feature-flag
+
+      keda_enabled                    = try(workload_autoscaler_profile.value.enable.keda, false)
+      vertical_pod_autoscaler_enabled = try(workload_autoscaler_profile.value.enable.vertical_pod, false)
+    }
+  }
+
   dynamic "windows_profile" {
     for_each = try(var.aks.profile.windows, null) != null ? { "default" = var.aks.profile.windows } : {}
 

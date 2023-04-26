@@ -30,6 +30,35 @@ module "analytics" {
   depends_on = [module.global]
 }
 
+module "kv" {
+  source = "github.com/aztfmods/module-azurerm-kv"
+
+  company = module.global.company
+  env     = module.global.env
+  region  = module.global.region
+
+  vault = {
+    location      = module.global.groups.demo.location
+    resourcegroup = module.global.groups.demo.name
+
+    secrets = {
+      tls_public_key = {
+        aks = {
+          algorithm = "RSA"
+          rsa_bits  = 2048
+        }
+      }
+    }
+
+    contacts = {
+      admin = {
+        email = "dummy@cloudnation.nl"
+      }
+    }
+  }
+  depends_on = [module.global]
+}
+
 module "aks" {
   source = "../../"
 
@@ -52,8 +81,17 @@ module "aks" {
       workspace_id = module.analytics.law.id
     }
 
-    linux_profile = {
-      username = "nodeadmin"
+    profile = {
+      autoscaler = {
+        enable = {
+          keda         = true
+          vertical_pod = true
+        }
+        linux = {
+          username = "nodeadmin"
+          ssh_key  = module.kv.tls_public_key.aks.value
+        }
+      }
     }
   }
   depends_on = [module.global]
