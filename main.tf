@@ -57,11 +57,19 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   dynamic "oms_agent" {
-    for_each = try(var.aks.oms_agent, null) != null ? { "default" = var.aks.oms_agent } : {}
+    for_each = (try(var.aks.workspace.enable.oms_agent, false)) ? { "oms_agent" = true } : {}
 
     content {
-      log_analytics_workspace_id      = oms_agent.value.workspace_id
+      log_analytics_workspace_id      = try(var.aks.workspace.id, null)
       msi_auth_for_monitoring_enabled = try(oms_agent.value.msi_auth_for_monitoring_enabled, false)
+    }
+  }
+
+  dynamic "microsoft_defender" {
+    for_each = (try(var.aks.workspace.enable.defender, false)) ? { "defender" = true } : {}
+
+    content {
+      log_analytics_workspace_id = try(var.aks.workspace.id, null)
     }
   }
 
