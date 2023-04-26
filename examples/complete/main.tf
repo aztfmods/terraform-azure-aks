@@ -77,8 +77,12 @@ module "aks" {
       node_count = 1
     }
 
-    oms_agent = {
-      workspace_id = module.analytics.law.id
+    workspace = {
+      id = module.analytics.law.id
+      enable = {
+        oms_agent = true
+        defender  = true
+      }
     }
 
     profile = {
