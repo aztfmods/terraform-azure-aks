@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.10.0](https://github.com/aztfmods/module-azurerm-aks/compare/v1.9.0...v1.10.0) (2023-04-27)
+
+
+### Features
+
+* add defender support ([#66](https://github.com/aztfmods/module-azurerm-aks/issues/66)) ([ecea52b](https://github.com/aztfmods/module-azurerm-aks/commit/ecea52b36b2c8104a2d838c34708415d08aebe81))
+* add maintenance support ([#67](https://github.com/aztfmods/module-azurerm-aks/issues/67)) ([3f1161e](https://github.com/aztfmods/module-azurerm-aks/commit/3f1161ef6412532b8856742724fe97fa68dcf6de))
+* add workload autoscaler profile support ([#64](https://github.com/aztfmods/module-azurerm-aks/issues/64)) ([decd315](https://github.com/aztfmods/module-azurerm-aks/commit/decd315505bcd212a7d9c52e1de040699e5b878c))
+
 ## [1.9.0](https://github.com/aztfmods/module-azurerm-aks/compare/v1.8.0...v1.9.0) (2023-04-18)
 
 
