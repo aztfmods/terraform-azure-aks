@@ -77,6 +77,19 @@ module "aks" {
       node_count = 1
     }
 
+    maintenance = {
+      allowed = {
+        w1 = {
+          day   = "Saturday"
+          hours = ["1", "6"]
+        }
+        w2 = {
+          day   = "Sunday"
+          hours = ["1"]
+        }
+      }
+    }
+
     workspace = {
       id = module.analytics.law.id
       enable = {
