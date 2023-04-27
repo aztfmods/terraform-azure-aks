@@ -110,6 +110,31 @@ resource "azurerm_kubernetes_cluster" "aks" {
     }
   }
 
+  dynamic "maintenance_window" {
+    for_each = try(var.aks.maintenance, null) != null ? { "default" = var.aks.maintenance } : {}
+
+    content {
+      dynamic "allowed" {
+        for_each = {
+          for k, v in try(var.aks.maintenance.allowed, {}) : k => v
+        }
+        content {
+          day   = allowed.value.day
+          hours = allowed.value.hours
+        }
+      }
+      dynamic "not_allowed" {
+        for_each = {
+          for k, v in try(var.aks.maintenance.disallowed, {}) : k => v
+        }
+        content {
+          end   = not_allowed.value.end
+          start = not_allowed.value.start
+        }
+      }
+    }
+  }
+
   default_node_pool {
     name       = "default"
     vm_size    = var.aks.default_node_pool.vmsize
