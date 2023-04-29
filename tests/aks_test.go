@@ -1,44 +1,46 @@
-package test
+package main
 
 import (
+	"fmt"
+	"github.com/gruntwork-io/terratest/modules/terraform"
+	"os"
 	"path/filepath"
 	"testing"
-  "os"
-  "fmt"
-	"github.com/gruntwork-io/terratest/modules/terraform"
 )
 
 var filesToCleanup = []string{
-	".terraform",
-	".terraform.lock.hcl",
-	"terraform.tfstate",
-	"terraform.tfstate.backup",
+	"*.terraform*",
+	"*tfstate*",
+}
+
+type TestCase struct {
+	name string
+	path string
 }
 
 func TestApplyNoError(t *testing.T) {
 	t.Parallel()
 
-	tests := map[string]string{
-    "simple": "../examples/simple",
-    "node-pools": "../examples/node-pools",
-    "container-registry": "../examples/container-registry",
-    "complete": "../examples/complete", 
+	tests := []TestCase{
+  		{name: "simple", path: "../examples/simple"},
+		{name: "node-pools", path: "../examples/node-pools"},
+		{name: "container-registry", path: "../examples/container-registry"},
+		{name: "complete", path: "../examples/complete"},
 	}
 
-	for name, path := range tests {
-		t.Run(name, func(t *testing.T) {
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
 			terraformOptions := &terraform.Options{
-				TerraformDir: path,
+				TerraformDir: test.path,
 				NoColor:      true,
-				Parallelism:  2,
 			}
 
 			terraform.WithDefaultRetryableErrors(t, &terraform.Options{})
 
-			defer cleanupFiles(path)
+			defer cleanupFiles(test.path)
 			defer func() {
-        terraform.Destroy(t, terraformOptions)
-        cleanupFiles(path)
+				terraform.Destroy(t, terraformOptions)
+				cleanupFiles(test.path)
 			}()
 
 			terraform.InitAndApply(t, terraformOptions)
