@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.0](https://github.com/aztfmods/module-azurerm-aks/compare/v1.10.0...v1.11.0) (2023-04-29)
+
+
+### Features
+
+* add makefile for testing purpose ([#68](https://github.com/aztfmods/module-azurerm-aks/issues/68)) ([e0b755c](https://github.com/aztfmods/module-azurerm-aks/commit/e0b755c73618fa854eb64db85993ad44dbd759a3))
+* small refactor tests ([#72](https://github.com/aztfmods/module-azurerm-aks/issues/72)) ([99e4f1f](https://github.com/aztfmods/module-azurerm-aks/commit/99e4f1f15c27fce5b6e3cdffe6b7708b460b4f98))
+
 ## [1.10.0](https://github.com/aztfmods/module-azurerm-aks/compare/v1.9.0...v1.10.0) (2023-04-27)
 
 
