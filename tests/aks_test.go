@@ -26,6 +26,11 @@ func getTerraformOptions(terraformDir string) *terraform.Options {
 	}
 }
 
+func cleanup(t *testing.T, tfOpts *terraform.Options) {
+	terraform.Destroy(t, tfOpts)
+	cleanupFiles(tfOpts.TerraformDir)
+}
+
 func TestApplyNoError(t *testing.T) {
 	t.Parallel()
 
@@ -42,12 +47,7 @@ func TestApplyNoError(t *testing.T) {
 
 			terraform.WithDefaultRetryableErrors(t, &terraform.Options{})
 
-			defer cleanupFiles(test.path)
-			defer func() {
-				terraform.Destroy(t, terraformOptions)
-				cleanupFiles(test.path)
-			}()
-
+			defer cleanup(t, terraformOptions)
 			terraform.InitAndApply(t, terraformOptions)
 		})
 	}
