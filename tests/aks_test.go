@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	"os"
 	"path/filepath"
@@ -28,7 +27,7 @@ func getTerraformOptions(terraformDir string) *terraform.Options {
 
 func cleanup(t *testing.T, tfOpts *terraform.Options) {
 	terraform.Destroy(t, tfOpts)
-	cleanupFiles(tfOpts.TerraformDir)
+	cleanupFiles(t, tfOpts.TerraformDir)
 }
 
 func TestApplyNoError(t *testing.T) {
@@ -53,12 +52,19 @@ func TestApplyNoError(t *testing.T) {
 	}
 }
 
-func cleanupFiles(dir string) {
-	for _, file := range filesToCleanup {
-		filePath := filepath.Join(dir, file)
-		fmt.Printf("Cleaning up %s\n", file)
-		if err := os.RemoveAll(filePath); err != nil {
-			fmt.Printf("Failed to remove %s: %v\n", filePath, err)
+func cleanupFiles(t *testing.T, dir string) {
+	for _, pattern := range filesToCleanup {
+		matches, err := filepath.Glob(filepath.Join(dir, pattern))
+		if err != nil {
+			t.Logf("Error: %v", err)
+			continue
+		}
+		for _, filePath := range matches {
+			if err := os.RemoveAll(filePath); err != nil {
+				t.Logf("Failed to remove %s: %v\n", filePath, err)
+			} else {
+				t.Logf("Successfully removed %s\n", filePath)
+			}
 		}
 	}
 }
