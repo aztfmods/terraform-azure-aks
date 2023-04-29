@@ -18,6 +18,13 @@ type TestCase struct {
 	path string
 }
 
+func getTerraformOptions(terraformDir string) *terraform.Options {
+  return &terraform.Options{
+    TerraformDir: terraformDir,
+    NoColor:      true,
+  }
+}
+
 func TestApplyNoError(t *testing.T) {
 	t.Parallel()
 
@@ -30,10 +37,7 @@ func TestApplyNoError(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			terraformOptions := &terraform.Options{
-				TerraformDir: test.path,
-				NoColor:      true,
-			}
+			terraformOptions := getTerraformOptions(test.path)
 
 			terraform.WithDefaultRetryableErrors(t, &terraform.Options{})
 
