@@ -22,7 +22,7 @@ func TestApplyNoError(t *testing.T) {
 	t.Parallel()
 
 	tests := []TestCase{
-  		{name: "simple", path: "../examples/simple"},
+  	{name: "simple", path: "../examples/simple"},
 		{name: "node-pools", path: "../examples/node-pools"},
 		{name: "container-registry", path: "../examples/container-registry"},
 		{name: "complete", path: "../examples/complete"},
