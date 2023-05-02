@@ -84,6 +84,17 @@ resource "azurerm_kubernetes_cluster" "aks" {
     }
   }
 
+  dynamic "service_mesh_profile" {
+    for_each = try(var.aks.profile.service_mesh, null) != null ? { "default" = var.aks.profile.service_mesh } : {}
+
+    content {
+      # feature flag needs to be enabled
+      # https://learn.microsoft.com/en-us/azure/aks/istio-deploy-addon#register-the-azureservicemeshpreview-feature-flag
+
+      mode = try(service_mesh_profile.value.mode, false)
+    }
+  }
+
   dynamic "workload_autoscaler_profile" {
     for_each = try(var.aks.profile.autoscaler, null) != null ? { "default" = var.aks.profile.autoscaler } : {}
 
