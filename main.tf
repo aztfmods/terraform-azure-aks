@@ -56,6 +56,17 @@ resource "azurerm_kubernetes_cluster" "aks" {
     }
   }
 
+  dynamic "http_proxy_config" {
+    for_each = try(var.aks.proxy, null) != null ? { "default" = var.aks.proxy } : {}
+
+    content {
+      http_proxy  = try(http_proxy_config.value.http, null)
+      https_proxy = try(http_proxy_config.value.https, null)
+      no_proxy    = try(http_proxy_config.value.exceptions, [])
+      trusted_ca  = try(http_proxy_config.value.trusted_ca, null)
+    }
+  }
+
   dynamic "oms_agent" {
     for_each = (try(var.aks.workspace.enable.oms_agent, false)) ? { "oms_agent" = true } : {}
 
