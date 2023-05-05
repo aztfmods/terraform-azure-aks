@@ -13,20 +13,31 @@ resource "azurerm_kubernetes_cluster" "aks" {
   automatic_channel_upgrade = try(var.aks.channel_upgrade, null)
 
   dynamic "network_profile" {
-    for_each = {
-      for k, v in try(var.aks.network_profile, {}) : k => v
-    }
+    for_each = try(var.aks.profile.network, null) != null ? { "default" = var.aks.profile.network } : {}
 
     content {
-      network_plugin     = try(network_profile.value.network_plugin, null)
-      network_mode       = try(network_profile.value.network_mode, null)
-      network_policy     = try(network_profile.value.network_policy, null)
+      network_plugin     = try(network_profile.value.plugin, null)
+      network_mode       = try(network_profile.value.mode, null)
+      network_policy     = try(network_profile.value.policy, null)
       dns_service_ip     = try(network_profile.value.dns_service_ip, null)
       docker_bridge_cidr = try(network_profile.value.docker_bridge_cidr, null)
       outbound_type      = try(network_profile.value.outbound_type, null)
       pod_cidr           = try(network_profile.value.pod_cidr, null)
       service_cidr       = try(network_profile.value.service_cidr, null)
       load_balancer_sku  = try(network_profile.value.load_balancer_sku, null)
+
+      dynamic "load_balancer_profile" {
+        for_each = try(network_profile.value.load_balancer, null) != null ? { "default" = network_profile.value.load_balancer } : {}
+
+        content {
+          managed_outbound_ip_count   = try(load_balancer_profile.value.managed_outbound_ip_count, null)
+          outbound_ip_prefix_ids      = try(load_balancer_profile.value.outbound_ip_prefix_ids, null)
+          outbound_ip_address_ids     = try(load_balancer_profile.value.outbound_ip_address_ids, null)
+          outbound_ports_allocated    = try(load_balancer_profile.value.outbound_ports_allocated, null)
+          idle_timeout_in_minutes     = try(load_balancer_profile.value.idle_timeout_in_minutes, null)
+          managed_outbound_ipv6_count = try(load_balancer_profile.value.managed_outbound_ipv6_count, null)
+        }
+      }
     }
   }
 
