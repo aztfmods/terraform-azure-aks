@@ -263,24 +263,25 @@ resource "azurerm_kubernetes_cluster_node_pool" "pools" {
   name                  = each.value.poolname
   kubernetes_cluster_id = each.value.aks_cluster_id
   vm_size               = each.value.vmsize
-  max_count             = try(each.value.max_count, null)
-  min_count             = try(each.value.min_count, null)
-  node_count            = try(each.value.node_count, null)
+  max_count             = each.value.max_count
+  min_count             = each.value.min_count
+  node_count            = each.value.node_count
 
-  zones                  = try(each.value.availability_zones, null)
-  enable_auto_scaling    = try(each.value.enable.auto_scaling, false)
-  enable_host_encryption = try(each.value.enable.host_encryption, false)
-  enable_node_public_ip  = try(each.value.enable.node_public_ip, false)
-  fips_enabled           = try(each.value.enable.fips, false)
-  eviction_policy        = try(each.value.eviction_policy, null)
-  kubelet_disk_type      = try(each.value.kubelet_disk_type, null)
-  max_pods               = try(each.value.max_pods, null)
-  mode                   = try(each.value.mode, "User")
-  node_labels            = try(each.value.node_labels, null)
-  node_taints            = try(each.value.node_taints, null)
-  os_sku                 = try(each.value.os_sku, null)
-  os_type                = try(each.value.os_type, null)
-  priority               = try(each.value.priority, null)
+  zones                  = each.value.availability_zones
+  enable_auto_scaling    = each.value.enable.auto_scaling
+  enable_host_encryption = each.value.enable.host_encryption
+  enable_node_public_ip  = each.value.enable.node_public_ip
+  fips_enabled           = each.value.enable.fips
+  eviction_policy        = each.value.eviction_policy
+  kubelet_disk_type      = each.value.kubelet_disk_type
+  max_pods               = each.value.max_pods
+  mode                   = each.value.mode
+  node_labels            = each.value.node_labels
+  node_taints            = each.value.node_taints
+  os_sku                 = each.value.os_sku
+  os_type                = each.value.os_type
+  priority               = each.value.priority
+  snapshot_id            = each.value.snapshot_id
   workload_runtime       = each.value.workload_runtime
 
   dynamic "upgrade_settings" {
