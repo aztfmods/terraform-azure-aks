@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.12.0](https://github.com/aztfmods/module-azurerm-aks/compare/v1.11.0...v1.12.0) (2023-05-05)
+
+
+### Features
+
+* add proxy config support ([#74](https://github.com/aztfmods/module-azurerm-aks/issues/74)) ([a039b1f](https://github.com/aztfmods/module-azurerm-aks/commit/a039b1ffdcd46c59f66f65389f0fd800eb9d82e4))
+* add service mesh profile support ([#76](https://github.com/aztfmods/module-azurerm-aks/issues/76)) ([e0bd070](https://github.com/aztfmods/module-azurerm-aks/commit/e0bd070d1672dfcf188d76cce6d69601f3ee8765))
+* add snapshot id property support on node pools ([#77](https://github.com/aztfmods/module-azurerm-aks/issues/77)) ([bdaac92](https://github.com/aztfmods/module-azurerm-aks/commit/bdaac9218749591a3e1569cd869f6fbb098e8a4d))
+
 ## [1.11.0](https://github.com/aztfmods/module-azurerm-aks/compare/v1.10.0...v1.11.0) (2023-04-29)
 
 
