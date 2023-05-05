@@ -268,10 +268,10 @@ resource "azurerm_kubernetes_cluster_node_pool" "pools" {
   node_count            = each.value.node_count
 
   zones                  = each.value.availability_zones
-  enable_auto_scaling    = each.value.enable.auto_scaling
-  enable_host_encryption = each.value.enable.host_encryption
-  enable_node_public_ip  = each.value.enable.node_public_ip
-  fips_enabled           = each.value.enable.fips
+  enable_auto_scaling    = each.value.enable_auto_scaling
+  enable_host_encryption = each.value.enable_host_encryption
+  enable_node_public_ip  = each.value.enable_node_public_ip
+  fips_enabled           = each.value.enable_fips
   eviction_policy        = each.value.eviction_policy
   kubelet_disk_type      = each.value.kubelet_disk_type
   max_pods               = each.value.max_pods
