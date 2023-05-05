@@ -99,6 +99,14 @@ module "aks" {
     }
 
     profile = {
+      network = {
+        plugin            = "azure"
+        load_balancer_sku = "standard"
+        load_balancer = {
+          idle_timeout_in_minutes   = 30
+          managed_outbound_ip_count = 10
+        }
+      }
       autoscaler = {
         enable = {
           keda         = true
