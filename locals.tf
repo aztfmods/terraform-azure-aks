@@ -3,9 +3,9 @@ locals {
     for pools_key, pools in try(var.aks.node_pools, {}) : {
       pools_key              = pools_key
       vmsize                 = pools.vmsize
-      count                  = pools.node_count
-      max_count              = pools.max_count
-      min_count              = pools.min_count
+      node_count             = try(pools.node_count, 1)
+      max_count              = try(pools.max_count, 0)
+      min_count              = try(pools.min_count, 0)
       max_surge              = pools.max_surge
       poolname               = "aks${pools_key}"
       aks_cluster_id         = azurerm_kubernetes_cluster.aks.id
@@ -19,7 +19,7 @@ locals {
       node_tains             = try(pools.node_tains, null)
       node_labels            = try(pools.node_labels, null)
       mode                   = try(pools.mode, "User")
-      max_pods               = try(pools.max_pods, null)
+      max_pods               = try(pools.max_pods, 30)
       kubelet_disk_type      = try(pools.kubelet_disk_type, null)
       eviction_policy        = try(pools.eviction_policy, null)
       fips_enabled           = try(pools.fips_enabled, false)
