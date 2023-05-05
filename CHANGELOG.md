@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.13.0](https://github.com/aztfmods/module-azurerm-aks/compare/v1.12.0...v1.13.0) (2023-05-05)
+
+
+### Features
+
+* add load balancer profile support ([#78](https://github.com/aztfmods/module-azurerm-aks/issues/78)) ([f4cb6c1](https://github.com/aztfmods/module-azurerm-aks/commit/f4cb6c1c4a57ba921d73776d7c13afd79a73aab0))
+
 ## [1.12.0](https://github.com/aztfmods/module-azurerm-aks/compare/v1.11.0...v1.12.0) (2023-05-05)
 
 
