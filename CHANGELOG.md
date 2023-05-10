@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.14.0](https://github.com/aztfmods/module-azurerm-aks/compare/v1.13.0...v1.14.0) (2023-05-10)
+
+
+### Features
+
+* add cluster extension support ([#80](https://github.com/aztfmods/module-azurerm-aks/issues/80)) ([c5e0945](https://github.com/aztfmods/module-azurerm-aks/commit/c5e094545807a410f2c89b3c33af6d9454fdaba7))
+
 ## [1.13.0](https://github.com/aztfmods/module-azurerm-aks/compare/v1.12.0...v1.13.0) (2023-05-05)
 
 
