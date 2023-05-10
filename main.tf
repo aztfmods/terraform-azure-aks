@@ -5,12 +5,24 @@ resource "azurerm_kubernetes_cluster" "aks" {
   resource_group_name = var.aks.resourcegroup
   location            = var.aks.location
 
-  kubernetes_version        = try(var.aks.version, null)
-  sku_tier                  = try(var.aks.sku, "Free")
-  node_resource_group       = try(var.aks.node_resource_group, [])
-  azure_policy_enabled      = try(var.aks.enable.azure_policy, false)
-  dns_prefix                = try(var.aks.dns_prefix, false)
-  automatic_channel_upgrade = try(var.aks.channel_upgrade, null)
+  kubernetes_version                = try(var.aks.version, null)
+  sku_tier                          = try(var.aks.sku, "Free")
+  node_resource_group               = try(var.aks.node_resource_group, [])
+  azure_policy_enabled              = try(var.aks.enable.azure_policy, false)
+  dns_prefix                        = try(var.aks.dns_prefix, false)
+  automatic_channel_upgrade         = try(var.aks.channel_upgrade, null)
+  edge_zone                         = try(var.aks.edge_zone, null)
+  oidc_issuer_enabled               = try(var.aks.oidc_issuer_enabled, false)
+  local_account_disabled            = try(var.aks.local_account_disabled, false)
+  private_cluster_enabled           = try(var.aks.private_cluster_enabled, false)
+  public_network_access_enabled     = try(var.aks.public_network_access_enabled, false)
+  open_service_mesh_enabled         = try(var.aks.open_service_mesh_enabled, false)
+  run_command_enabled               = try(var.aks.run_command_enabled, false)
+  role_based_access_control_enabled = try(var.aks.role_based_access_control_enabled, false)
+  image_cleaner_enabled             = try(var.aks.image_cleaner_enabled, false)
+  image_cleaner_interval_hours      = try(var.aks.image_cleaner_interval_hours, 48)
+  http_application_routing_enabled  = try(var.aks.http_application_routing_enabled, false)
+  workload_identity_enabled         = try(var.aks.workload_identity_enabled, false)
 
   dynamic "network_profile" {
     for_each = try(var.aks.profile.network, null) != null ? { "default" = var.aks.profile.network } : {}
@@ -318,8 +330,8 @@ resource "azurerm_kubernetes_cluster_node_pool" "pools" {
         content {
           fs_aio_max_nr                      = try(sysctl_config.value.fs_aio_max_nr, null)
           fs_file_max                        = try(sysctl_config.value.fs_file_max, null)
-          fs_inotify_max_user_watches        = try(sysctl_config.value.fs_inotify_max_user_watches, null)
           fs_nr_open                         = try(sysctl_config.value.fs_nr_open, null)
+          fs_inotify_max_user_watches        = try(sysctl_config.value.fs_inotify_max_user_watches, null)
           kernel_threads_max                 = try(sysctl_config.value.kernel_threads_max, null)
           net_core_netdev_max_backlog        = try(sysctl_config.value.net_core_netdev_max_backlog, null)
           net_core_optmem_max                = try(sysctl_config.value.net_core_optmem_max, null)
@@ -368,6 +380,32 @@ resource "azurerm_kubernetes_cluster_node_pool" "pools" {
       image_gc_low_threshold    = try(kubelet_config.value.image_gc_low_threshold, null)
       pod_max_pid               = try(kubelet_config.value.pod_max_pid, null)
       topology_manager_policy   = try(kubelet_config.value.topology_manager_policy, null)
+    }
+  }
+}
+
+# feature flag needs to be enabled
+# az feature register --namespace "Microsoft.ContainerService" --name "AKS-Dapr"
+# ExtensionTypeRegistrationGetFailed Message="Extension type 'microsoft_dapr' is not supported in region.
+resource "azurerm_kubernetes_cluster_extension" "ext" {
+  for_each = try(var.aks.extensions, {})
+
+  name                             = "ext-${each.key}"
+  cluster_id                       = azurerm_kubernetes_cluster.aks.id
+  extension_type                   = each.key
+  release_train                    = try(each.value.release_train, null)
+  target_namespace                 = try(each.value.target_namespace, null)
+  release_namespace                = try(each.value.release_namespace, null)
+  configuration_settings           = try(each.value.configuration_settings, null)
+  configuration_protected_settings = try(each.value.configuration_protected_settings, null)
+
+  dynamic "plan" {
+    for_each = try(each.value.plan, {})
+
+    content {
+      name      = plan.value.name
+      publisher = plan.value.publisher
+      product   = plan.value.product
     }
   }
 }
