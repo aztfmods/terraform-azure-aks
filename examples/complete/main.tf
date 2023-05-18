@@ -72,7 +72,7 @@ module "aks" {
     node_resource_group = "${module.global.groups.demo.name}-node"
 
     enable = {
-      public_access            = true
+      public_access = true
     }
 
     default_node_pool = {
