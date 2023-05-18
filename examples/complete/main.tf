@@ -71,6 +71,10 @@ module "aks" {
     resourcegroup       = module.global.groups.demo.name
     node_resource_group = "${module.global.groups.demo.name}-node"
 
+    enable = {
+      public_access            = true
+    }
+
     default_node_pool = {
       vmsize     = "Standard_DS2_v2"
       zones      = [1, 2, 3]
