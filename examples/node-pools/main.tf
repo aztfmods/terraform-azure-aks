@@ -2,29 +2,35 @@ provider "azurerm" {
   features {}
 }
 
-module "global" {
-  source = "github.com/aztfmods/module-azurerm-global"
+module "regions" {
+  source = "github.com/aztfmods/module-azurerm-regions"
 
-  company = "cn"
-  env     = "p"
-  region  = "weu"
+  workload    = var.workload
+  environment = var.environment
 
-  rgs = {
-    aks = { location = "westeurope" }
-  }
+  location = "westeurope"
+}
+
+module "rg" {
+  source = "github.com/aztfmods/module-azurerm-rg"
+
+  workload       = var.workload
+  environment    = var.environment
+  location_short = module.regions.location_short
+  location       = module.regions.location
 }
 
 module "aks" {
   source = "../../"
 
-  company = module.global.company
-  env     = module.global.env
-  region  = module.global.region
+  workload       = var.workload
+  environment    = var.environment
+  location_short = module.regions.location_short
 
   aks = {
-    location            = module.global.groups.aks.location
-    resourcegroup       = module.global.groups.aks.name
-    node_resource_group = "${module.global.groups.aks.name}-node"
+    location            = module.rg.group.location
+    resourcegroup       = module.rg.group.name
+    node_resource_group = "${module.rg.group.name}-node"
     channel_upgrade     = "stable"
     dns_prefix          = "aksdemo"
 
@@ -85,5 +91,6 @@ module "aks" {
       }
     }
   }
-  depends_on = [module.global]
+  depends_on = [module.rg]
 }
+

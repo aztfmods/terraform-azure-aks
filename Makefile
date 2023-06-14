@@ -1,13 +1,12 @@
-.PHONY: complete container-registry node-pools simple
+.PHONY: test
 
-complete:
-	cd tests && go test -v -timeout 60m -run TestApplyNoError/complete
+export WORKLOAD
+export ENVIRONMENT
+export USECASE
 
-simple:
-	cd tests && go test -v -timeout 60m -run TestApplyNoError/simple
+#test_extended:
 
-node-pools:
-	cd tests && go test -v -timeout 60m -run TestApplyNoError/node-pools
+test:
+	cd tests && go test -v -timeout 60m -run TestApplyNoError/$(USECASE) ./aks_test.go
 
-container-registry:
-	cd tests && go test -v -timeout 60m -run TestApplyNoError/container-registry
+#test_local:

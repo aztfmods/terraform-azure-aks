@@ -1,7 +1,7 @@
 # aks cluster
 resource "azurerm_kubernetes_cluster" "aks" {
 
-  name                = "aks-${var.company}-${var.env}-${var.region}"
+  name                = "aks-${var.workload}-${var.environment}-${var.location_short}"
   resource_group_name = var.aks.resourcegroup
   location            = var.aks.location
 
