@@ -15,15 +15,15 @@ The below examples shows the usage when consuming the module:
 
 ```hcl
 module "aks" {
-  source = "../../"
+  source = "github.com/aztfmods/module-azurerm-aks"
 
-  company = module.global.company
-  env     = module.global.env
-  region  = module.global.region
+  workload       = var.workload
+  environment    = var.environment
+  location_short = module.region.location_short
 
   aks = {
-    location            = module.global.groups.demo.location
-    resourcegroup       = module.global.groups.demo.name
+    location            = module.rg.group.location
+    resourcegroup       = module.rg.group.name
     node_resource_group = "${module.global.groups.demo.name}-node"
 
     default_node_pool = {
@@ -31,8 +31,15 @@ module "aks" {
       zones      = [1, 2, 3]
       node_count = 1
     }
+
+    profile = {
+      linux = {
+        username = "nodeadmin"
+        ssh_key  = module.kv.tls_public_key.aks.value
+      }
+    }
   }
-  depends_on = [module.global]
+  depends_on = [module.rg]
 }
 ```
 
@@ -40,28 +47,23 @@ module "aks" {
 
 ```hcl
 module "aks" {
-  source = "../../"
+  source = "github.com/aztfmods/module-azurerm-aks"
 
-  company = module.global.company
-  env     = module.global.env
-  region  = module.global.region
+  workload       = var.workload
+  environment    = var.environment
+  location_short = module.regions.location_short
 
   aks = {
-    location            = module.global.groups.demo.location
-    resourcegroup       = module.global.groups.demo.name
-    node_resource_group = "${module.global.groups.demo.name}-node"
+    location            = module.rg.group.location
+    resourcegroup       = module.rg.group.name
+    node_resource_group = "${module.rg.group.name}-node"
     channel_upgrade     = "stable"
     dns_prefix          = "aksdemo"
-    version             = 1.22
 
     default_node_pool = {
-      vmsize     = "Standard_DS2_v2"
-      zones      = [1, 2, 3]
       node_count = 1
-
-      upgrade_settings = {
-        max_surge = 50
-      }
+      vmsize           = "Standard_DS2_v2"
+      zones            = [1, 2, 3]
     }
 
     node_pools = {
@@ -69,8 +71,10 @@ module "aks" {
       pool2 = { vmsize = "Standard_DS2_v2", node_count = 1, max_surge = 50 }
     }
   }
-  depends_on = [module.global]
+  depends_on = [module.rg]
 }
+
+
 ```
 
 ## Resources
@@ -80,15 +84,16 @@ module "aks" {
 | [azurerm_kubernetes_cluster](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster) | resource |
 | [azurerm_kubernetes_cluster_node_pool](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster_node_pool) | resource |
 | [azurerm_role_assignment](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
+| [azurerm_kubernetes_cluster_extension](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster_extension) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Required |
 | :-- | :-- | :-- | :-- |
 | `aks` | describes aks related configuration | object | yes |
-| `company` | contains the company name used, for naming convention	| string | yes |
-| `region` | contains the shortname of the region, used for naming convention	| string | yes |
-| `env` | contains shortname of the environment used for naming convention	| string | yes |
+| `workload` | contains the workload name used, for naming convention	| string | yes |
+| `location_short` | contains the shortname of the region, used for naming convention	| string | yes |
+| `environment` | contains shortname of the environment used for naming convention	| string | yes |
 
 ## Outputs
 
@@ -99,8 +104,14 @@ module "aks" {
 
 ## Authors
 
-Module is maintained by [Dennis Kool](https://github.com/dkooll) with help from [these awesome contributors](https://github.com/aztfmods/module-azurerm-aks/graphs/contributors).
+Module is maintained by [Dennis Kool](https://github.com/dkooll)
 
 ## License
 
 MIT Licensed. See [LICENSE](https://github.com/aztfmods/module-azurerm-aks/blob/main/LICENSE) for full details.
+
+## References
+
+- [Documentation](https://learn.microsoft.com/en-us/azure/aks)
+- [Rest Api](https://learn.microsoft.com/en-us/rest/api/aks)
+
