@@ -8,7 +8,7 @@ jobs:
     name: validate
     uses: aztfmods/module-azurerm-global/.github/workflows/validate.yml@main
     with:
-      #test: node-pools
+      test: node-pools
       workload: demo
       environment: dev
     secrets:
