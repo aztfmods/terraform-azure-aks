@@ -59,7 +59,7 @@ module "aks" {
   aks = {
     location            = module.rg.group.location
     resourcegroup       = module.rg.group.name
-    node_resource_group = "${module.global.groups.demo.name}-node"
+    node_resource_group = "${module.rg.group.name}-node"
 
     default_node_pool = {
       vmsize     = "Standard_DS2_v2"
