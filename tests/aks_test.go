@@ -8,7 +8,7 @@ import (
 	"github.com/gruntwork-io/terratest/modules/terraform"
 )
 
-func TestAppyNoError(t *testing.T) {
+func TestApplyNoError(t *testing.T) {
 	t.Parallel()
 
 	tests := []shared.TestCase{
