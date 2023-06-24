@@ -2,34 +2,27 @@ provider "azurerm" {
   features {}
 }
 
-module "region" {
-  source = "github.com/aztfmods/module-azurerm-regions"
-
-  workload    = var.workload
-  environment = var.environment
-
-  location = "westeurope"
-}
-
 module "rg" {
   source = "github.com/aztfmods/module-azurerm-rg"
 
-  workload       = var.workload
-  environment    = var.environment
-  location_short = module.region.location_short
-  location       = module.region.location
+  environment = var.environment
+
+  groups = {
+    demo = {
+      region = "westeurope"
+    }
+  }
 }
 
 module "analytics" {
   source = "github.com/aztfmods/module-azurerm-law"
 
-  workload       = var.workload
-  environment    = var.environment
-  location_short = module.region.location_short
+  workload    = var.workload
+  environment = var.environment
 
   law = {
-    location      = module.rg.group.location
-    resourcegroup = module.rg.group.name
+    location      = module.rg.groups.demo.location
+    resourcegroup = module.rg.groups.demo.name
     sku           = "PerGB2018"
     retention     = 90
   }
@@ -39,13 +32,12 @@ module "analytics" {
 module "kv" {
   source = "github.com/aztfmods/module-azurerm-kv"
 
-  workload       = var.workload
-  environment    = var.environment
-  location_short = module.region.location_short
+  workload    = var.workload
+  environment = var.environment
 
   vault = {
-    location      = module.rg.group.location
-    resourcegroup = module.rg.group.name
+    location      = module.rg.groups.demo.location
+    resourcegroup = module.rg.groups.demo.name
 
     secrets = {
       tls_public_key = {
@@ -68,14 +60,13 @@ module "kv" {
 module "aks" {
   source = "../../"
 
-  workload       = var.workload
-  environment    = var.environment
-  location_short = module.region.location_short
+  workload    = var.workload
+  environment = var.environment
 
   aks = {
-    location            = module.rg.group.location
-    resourcegroup       = module.rg.group.name
-    node_resource_group = "${module.rg.group.name}-node"
+    location            = module.rg.groups.demo.location
+    resourcegroup       = module.rg.groups.demo.name
+    node_resource_group = "${module.rg.groups.demo.name}-node"
 
     enable = {
       public_access = true

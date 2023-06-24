@@ -2,34 +2,27 @@ provider "azurerm" {
   features {}
 }
 
-module "region" {
-  source = "github.com/aztfmods/module-azurerm-regions"
+module "rg" {
+  source = "github.com/aztfmods/module-azurerm-rg"
+
+  environment = var.environment
+
+  groups = {
+    demo = {
+      region = "westeurope"
+    }
+  }
+}
+
+module "registry" {
+  source = "github.com/aztfmods/module-azurerm-acr"
 
   workload    = var.workload
   environment = var.environment
 
-  location = "westeurope"
-}
-
-module "rg" {
-  source = "github.com/aztfmods/module-azurerm-rg"
-
-  workload       = var.workload
-  environment    = var.environment
-  location_short = module.region.location_short
-  location       = module.region.location
-}
-
-module "acr" {
-  source = "github.com/aztfmods/module-azurerm-acr"
-
-  workload       = var.workload
-  environment    = var.environment
-  location_short = module.region.location_short
-
   registry = {
-    location      = module.rg.group.location
-    resourcegroup = module.rg.group.name
+    location      = module.rg.groups.demo.location
+    resourcegroup = module.rg.groups.demo.name
     sku           = "Premium"
   }
   depends_on = [module.rg]
@@ -38,18 +31,17 @@ module "acr" {
 module "aks" {
   source = "../../"
 
-  workload       = var.workload
-  environment    = var.environment
-  location_short = module.region.location_short
+  workload    = var.workload
+  environment = var.environment
 
   aks = {
-    location            = module.rg.group.location
-    resourcegroup       = module.rg.group.name
-    node_resource_group = "${module.rg.group.name}-node"
+    location            = module.rg.groups.demo.location
+    resourcegroup       = module.rg.groups.demo.name
+    node_resource_group = "${module.rg.groups.demo.name}-node"
     dns_prefix          = "demo"
 
     registry = {
-      attach = true, role_assignment_scope = module.acr.acr.id
+      attach = true, role_assignment_scope = module.registry.acr.id
     }
 
     default_node_pool = {
