@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/aztfmods/module-azurerm-aks/shared"
+	"github.com/aztfmods/terraform-azure-aks/shared"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 )
 
