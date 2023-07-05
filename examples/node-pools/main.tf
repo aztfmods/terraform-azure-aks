@@ -29,8 +29,8 @@ module "aks" {
 
     default_node_pool = {
       node_count = 1
-      vmsize           = "Standard_DS2_v2"
-      zones            = [1, 2, 3]
+      vmsize     = "Standard_DS2_v2"
+      zones      = [1, 2, 3]
     }
 
     node_pools = {
