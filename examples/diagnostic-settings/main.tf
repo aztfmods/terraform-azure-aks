@@ -3,7 +3,7 @@ provider "azurerm" {
 }
 
 module "global" {
-  source = "github.com/aztfmods/module-azurerm-global"
+  source = "github.com/aztfmods/module-azurerm-global?ref=v1.0.0"
 
   company = "cn"
   env     = "p"
@@ -15,7 +15,7 @@ module "global" {
 }
 
 module "logging" {
-  source = "github.com/aztfmods/module-azurerm-law"
+  source = "github.com/aztfmods/module-azurerm-law?ref=v1.6.0"
 
   company = module.global.company
   env     = module.global.env
@@ -53,7 +53,7 @@ module "aks" {
 }
 
 module "diagnostic_settings" {
-  source = "github.com/aztfmods/module-azurerm-diags"
+  source = "github.com/aztfmods/module-azurerm-diags?ref=v1.0.0"
   count  = length(module.aks.merged_ids)
 
   resource_id           = element(module.aks.merged_ids, count.index)
