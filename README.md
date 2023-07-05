@@ -14,7 +14,7 @@ A last key goal is to separate logic from configuration in the module, thereby e
 
 ## Features
 
-- the system flexibly handles various workloads by supporting multiple node pools
+- enhanced adaptability with support for multiple node pools
 - utilization of terratest for robust validation
 - providing support for integration with container registries, enhancing the efficiency of image management
 
