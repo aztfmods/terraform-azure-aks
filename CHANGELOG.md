@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.15.0](https://github.com/aztfmods/terraform-azure-aks/compare/v1.14.0...v1.15.0) (2023-07-10)
+
+
+### Features
+
+* **deps:** bump github.com/gruntwork-io/terratest in /tests ([#93](https://github.com/aztfmods/terraform-azure-aks/issues/93)) ([7d16e52](https://github.com/aztfmods/terraform-azure-aks/commit/7d16e52a97554483fce898710bb7e33b8e846a3c))
+* **deps:** bump google.golang.org/grpc from 1.51.0 to 1.53.0 in /tests ([#92](https://github.com/aztfmods/terraform-azure-aks/issues/92)) ([9d19733](https://github.com/aztfmods/terraform-azure-aks/commit/9d19733760a552e146f816e528e9c20c33ae5c2b))
+* solve linting issues and update documentation ([#90](https://github.com/aztfmods/terraform-azure-aks/issues/90)) ([8ef4567](https://github.com/aztfmods/terraform-azure-aks/commit/8ef4567001759529204d75eae1c05145f143f78f))
+
 ## [1.14.0](https://github.com/aztfmods/module-azurerm-aks/compare/v1.13.0...v1.14.0) (2023-05-10)
 
 
