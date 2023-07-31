@@ -114,7 +114,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
       # feature flag needs to be enabled
       # https://learn.microsoft.com/en-us/azure/aks/istio-deploy-addon#register-the-azureservicemeshpreview-feature-flag
 
-      mode = try(service_mesh_profile.value.mode, false)
+      mode                             = try(service_mesh_profile.value.mode, false)
+      internal_ingress_gateway_enabled = try(service_mesh_profile.value.internal_ingress_gateway_enabled, false)
+      external_ingress_gateway_enabled = try(service_mesh_profile.value.external_ingress_gateway_enabled, false)
     }
   }
 
