@@ -15,10 +15,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
   oidc_issuer_enabled                 = try(var.aks.enable.oidc_issuer, false)
   local_account_disabled              = try(var.aks.disable.local_account, false)
   private_cluster_enabled             = try(var.aks.enable_private_cluster, false)
-  public_network_access_enabled       = try(var.aks.enable.public_access, false)
+  public_network_access_enabled       = try(var.aks.enable.public_access, true)
   open_service_mesh_enabled           = try(var.aks.enable.service_mesh, false)
   run_command_enabled                 = try(var.aks.enable.run_command, false)
-  role_based_access_control_enabled   = try(var.aks.enable.rbac, false)
+  role_based_access_control_enabled   = try(var.aks.enable.rbac, true)
   image_cleaner_enabled               = try(var.aks.enable.image_cleaner, false)
   image_cleaner_interval_hours        = try(var.aks.image_cleaner_interval_hours, 48)
   http_application_routing_enabled    = try(var.aks.enable.http_application_routing, false)
@@ -183,6 +183,56 @@ resource "azurerm_kubernetes_cluster" "aks" {
     }
   }
 
+  dynamic "maintenance_window_node_os" {
+    for_each = try(var.aks.maintenance_node_os, null) != null ? { "default" = var.aks.maintenance_node_os } : {}
+
+    content {
+      dynamic "not_allowed" {
+        for_each = {
+          for k, v in try(var.aks.maintenance_node_os.disallowed, {}) : k => v
+        }
+        content {
+          end   = not_allowed.value.end
+          start = not_allowed.value.start
+        }
+      }
+
+      frequency   = maintenance_window_node_os.value.config.frequency
+      interval    = maintenance_window_node_os.value.config.interval
+      duration    = maintenance_window_node_os.value.config.duration
+      day_of_week = try(maintenance_window_node_os.value.config.day_of_week, null)
+      week_index  = try(maintenance_window_node_os.value.config.week_index, null)
+      start_time  = try(maintenance_window_node_os.value.config.start_time, null)
+      utc_offset  = try(maintenance_window_node_os.value.config.utc_offset, null)
+      start_date  = try(maintenance_window_node_os.value.config.start_date, null)
+    }
+  }
+
+  dynamic "maintenance_window_auto_upgrade" {
+    for_each = try(var.aks.maintenance_auto_upgrade, null) != null ? { "default" = var.aks.maintenance_auto_upgrade } : {}
+
+    content {
+      dynamic "not_allowed" {
+        for_each = {
+          for k, v in try(var.aks.maintenance_auto_upgrade.disallowed, {}) : k => v
+        }
+        content {
+          end   = not_allowed.value.end
+          start = not_allowed.value.start
+        }
+      }
+
+      frequency   = maintenance_window_auto_upgrade.value.config.frequency
+      interval    = maintenance_window_auto_upgrade.value.config.interval
+      duration    = maintenance_window_auto_upgrade.value.config.duration
+      day_of_week = try(maintenance_window_auto_upgrade.value.config.day_of_week, null)
+      week_index  = try(maintenance_window_auto_upgrade.value.config.week_index, null)
+      start_time  = try(maintenance_window_auto_upgrade.value.config.start_time, null)
+      utc_offset  = try(maintenance_window_auto_upgrade.value.config.utc_offset, null)
+      start_date  = try(maintenance_window_auto_upgrade.value.config.start_date, null)
+    }
+  }
+
   default_node_pool {
     name       = "default"
     vm_size    = var.aks.default_node_pool.vmsize
@@ -190,7 +240,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     max_count  = try(var.aks.default_node_pool.max_count, null)
     max_pods   = try(var.aks.default_node_pool.max_pods, 30)
     min_count  = try(var.aks.default_node_pool.min_count, null)
-    zones      = try(var.aks.default_node_pool.zones, [])
+    zones      = try(var.aks.default_node_pool.zones, [1, 2, 3])
 
     custom_ca_trust_enabled      = try(var.aks.default_node_pool.enable.custom_ca_trust, false)
     enable_auto_scaling          = try(var.aks.default_node_pool.auto_scaling, false)

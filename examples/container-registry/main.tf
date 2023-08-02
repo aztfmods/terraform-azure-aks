@@ -25,11 +25,10 @@ module "registry" {
     resourcegroup = module.rg.groups.demo.name
     sku           = "Premium"
   }
-  depends_on = [module.rg]
 }
 
 module "aks" {
-  source = "github.com/aztfmods/terraform-azure-aks?ref=v1.14.0"
+  source = "github.com/aztfmods/terraform-azure-aks?ref=v1.16.0"
 
   workload    = var.workload
   environment = var.environment
@@ -38,7 +37,6 @@ module "aks" {
     location            = module.rg.groups.demo.location
     resourcegroup       = module.rg.groups.demo.name
     node_resource_group = "${module.rg.groups.demo.name}-node"
-    dns_prefix          = "demo"
 
     registry = {
       attach = true, role_assignment_scope = module.registry.acr.id
@@ -49,5 +47,4 @@ module "aks" {
       node_count = 1
     }
   }
-  depends_on = [module.global]
 }

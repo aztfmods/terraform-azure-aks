@@ -15,7 +15,7 @@ module "rg" {
 }
 
 module "aks" {
-  source = "github.com/aztfmods/terraform-azure-aks?ref=v1.14.0"
+  source = "github.com/aztfmods/terraform-azure-aks?ref=v1.16.0"
 
   workload    = var.workload
   environment = var.environment
@@ -25,12 +25,10 @@ module "aks" {
     resourcegroup       = module.rg.groups.demo.name
     node_resource_group = "${module.rg.groups.demo.name}-node"
     channel_upgrade     = "stable"
-    dns_prefix          = "aksdemo"
 
     default_node_pool = {
       node_count = 1
       vmsize     = "Standard_DS2_v2"
-      zones      = [1, 2, 3]
     }
 
     node_pools = {
@@ -38,6 +36,5 @@ module "aks" {
       pool2 = { vmsize = "Standard_DS2_v2", node_count = 1, max_surge = 50 }
     }
   }
-  depends_on = [module.rg]
 }
 
