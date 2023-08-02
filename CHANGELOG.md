@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.16.0](https://github.com/aztfmods/terraform-azure-aks/compare/v1.15.0...v1.16.0) (2023-08-02)
+
+
+### Features
+
+* add internal and external ingress gateway support for service mesh ([#97](https://github.com/aztfmods/terraform-azure-aks/issues/97)) ([c453c12](https://github.com/aztfmods/terraform-azure-aks/commit/c453c12faa7e96b9497556940d7ac189ee08e220))
+* add support for custom cert base64 properties ([#100](https://github.com/aztfmods/terraform-azure-aks/issues/100)) ([3bbab46](https://github.com/aztfmods/terraform-azure-aks/commit/3bbab46edc95d8b8bea52ec9c13f658ea9269519))
+* add windows node os and auto upgrade maintenance support ([#101](https://github.com/aztfmods/terraform-azure-aks/issues/101)) ([5021a26](https://github.com/aztfmods/terraform-azure-aks/commit/5021a26a87ee6f15ce37938eda8d31e042ff2598))
+* **deps:** bump github.com/gruntwork-io/terratest in /tests ([#96](https://github.com/aztfmods/terraform-azure-aks/issues/96)) ([772e21b](https://github.com/aztfmods/terraform-azure-aks/commit/772e21b5e4c6db1ce292b34d1c2af51d5d050c82))
+
 ## [1.15.0](https://github.com/aztfmods/terraform-azure-aks/compare/v1.14.0...v1.15.0) (2023-07-10)
 
 
